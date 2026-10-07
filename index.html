@@ -1,0 +1,2652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#F4F1EC">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="GSKGO">
+<meta name="application-name" content="GSKGO">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="robots" content="noindex">
+<meta name="description" content="GSKGO: a 2-minute regional vaccination briefing for primary-care doctors in Spain. Concept prototype, IE MDBI × GSK business case, Track B, Team 3. Fictional persona; AI is simulated.">
+<title>GSKGO · concept prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F1EC; --surface:#FFFFFF; --surface-2:#FAF8F4;
+  --ink:#14202B; --ink-2:#3A4651; --muted:#5A646E;
+  --line:#E2DCD2; --line-2:#ECE7DF;
+  --brand:#0B6E69; --brand-ink:#075A55; --brand-soft:#E0F0EE;
+  --ai:#6A4CF5; --ai-2:#9D5CF6; --ai-ink:#5133D6; --ai-soft:#EFEBFF;
+  --warn:#A9530B; --warn-soft:#FCEFE1; --ok:#1C7444; --ok-soft:#E3F3E8; --danger:#B42318; --danger-soft:#FCEBE9;
+  --hcp:#B9592F; --mkt:#3F4B8C;
+  --l1:#FCE4E4; --l1-ink:#8A2F2F; --l2:#E5534F; --l3:#2B3A6B; --l4:#121A3A;
+  --r:18px; --r-sm:12px;
+  --shadow:0 1px 2px rgba(20,32,43,.05),0 6px 20px rgba(20,32,43,.06);
+  --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+  --tabs-h:58px;
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);font-size:15px;line-height:1.5;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+button{background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:inherit}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,p,ol,ul,figure,blockquote,fieldset{margin:0}
+ol,ul{padding:0}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.ic{width:20px;height:20px;flex:none;display:inline-block;vertical-align:middle}
+.vh{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+/* ---------- stage, device frame, presenter ---------- */
+.stage{height:100vh;display:flex}
+@supports (height:100dvh){ .stage{height:var(--vvh,100dvh)} }
+.device{position:relative;flex:1;height:100%;overflow:hidden;background:var(--bg);isolation:isolate}
+.statusbar,.island,.presenter{display:none}
+@media (min-width:700px) and (min-height:620px){
+  body{background:radial-gradient(900px 600px at 22% 12%,#F7F3ED 0%,transparent 70%),radial-gradient(700px 520px at 88% 92%,#DCE7E4 0%,transparent 70%),#E7E2DA}
+  .stage{align-items:center;justify-content:center;gap:48px;padding:24px}
+  .device{--h:min(844px,calc(100vh - 48px));--sat:46px;--sab:22px;flex:none;height:var(--h);width:calc(var(--h) * .4621);border-radius:52px;box-shadow:0 0 0 11px #121417,0 0 0 12.5px #3b4047,0 40px 80px -20px rgba(20,25,35,.45)}
+  .statusbar{display:flex;position:absolute;z-index:60;top:0;left:0;right:0;height:46px;padding:6px 30px 0 38px;align-items:center;justify-content:space-between;font-size:15px;font-weight:600;color:var(--ink);pointer-events:none}
+  .island{display:block;position:absolute;z-index:61;top:11px;left:50%;width:112px;height:32px;margin-left:-56px;border-radius:20px;background:#0b0c0e;pointer-events:none}
+  .device::after{content:"";position:absolute;z-index:90;bottom:8px;left:50%;width:128px;height:5px;margin-left:-64px;border-radius:3px;background:rgba(20,32,43,.85);pointer-events:none}
+  .device.status-light::after{background:rgba(255,255,255,.9)}
+  .device.status-light .statusbar{color:#fff}
+}
+.sb-icons{display:flex;gap:6px;align-items:center}
+@media (min-width:1100px) and (min-height:620px){ .presenter{display:flex} }
+.presenter{flex-direction:column;gap:18px;width:300px;max-height:calc(100vh - 48px);overflow:auto;padding:22px;border-radius:24px;background:rgba(255,255,255,.74);border:1px solid rgba(255,255,255,.9);box-shadow:0 20px 50px -20px rgba(20,25,35,.25);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.pp-title{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;line-height:1.2}
+.pp-title small{display:block;font-weight:500;font-size:12.5px;color:var(--muted)}
+.pp-title .logo{width:32px;height:32px}
+.pp-group h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 6px;font-weight:700}
+.pp-jumps{display:grid;gap:2px}
+.pp-jumps button{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:10px;font-size:14px;font-weight:500;color:var(--ink-2)}
+.pp-jumps button:hover{background:rgba(0,0,0,.04)}
+.pp-jumps button[aria-current="true"]{background:var(--brand-soft);color:var(--brand-ink);font-weight:600}
+.pp-num{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--line-2);color:var(--muted);flex:none}
+.pp-jumps button[aria-current="true"] .pp-num{background:var(--brand);color:#fff}
+.pp-qr{display:flex;gap:12px;align-items:center;font-size:13px;color:var(--muted);line-height:1.4}
+.pp-qr #qr{flex:none;width:104px;height:104px;background:#fff;padding:6px;border-radius:12px;border:1px solid var(--line)}
+.pp-qr #qr svg,.pp-qr #qr img{width:100%;height:100%;display:block}
+.pp-note{font-size:12.5px;color:var(--muted);line-height:1.45}
+
+/* ---------- screens & navigation ---------- */
+.screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg);outline:none}
+.screen.active{display:flex}
+/* native-style stack transitions: new screen slides over, old one parallaxes under */
+.screen.enter-fwd{z-index:2;animation:enterFwd .34s cubic-bezier(.2,.8,.2,1) both;box-shadow:-12px 0 32px rgba(20,32,43,.12)}
+.screen.leave-fwd{z-index:1;animation:leaveFwd .34s cubic-bezier(.2,.8,.2,1) both}
+.screen.enter-back{z-index:1;animation:enterBack .34s cubic-bezier(.2,.8,.2,1) both}
+.screen.leave-back{z-index:2;animation:leaveBack .34s cubic-bezier(.2,.8,.2,1) both;box-shadow:-12px 0 32px rgba(20,32,43,.12)}
+.screen.enter-fade{z-index:2;animation:fade .2s ease both}
+.screen.leave-fade{z-index:1;animation:fadeOut .2s ease both}
+.screen.swipe-top{z-index:2;box-shadow:-12px 0 32px rgba(20,32,43,.14)}
+.screen.swipe-under{z-index:1}
+.screen::after{content:"";position:absolute;inset:0;background:rgba(10,16,24,.07);opacity:0;pointer-events:none;z-index:40}
+.screen.leave-fwd::after{animation:dimIn .34s ease both}
+.screen.enter-back::after{animation:dimOut .34s ease both}
+.screen.swipe-under::after{opacity:1}
+@keyframes enterFwd{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes leaveFwd{from{transform:translateX(0)}to{transform:translateX(-30%)}}
+@keyframes enterBack{from{transform:translateX(-30%)}to{transform:translateX(0)}}
+@keyframes leaveBack{from{transform:translateX(0)}to{transform:translateX(100%)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+@keyframes dimIn{from{opacity:0}to{opacity:1}}
+@keyframes dimOut{from{opacity:1}to{opacity:0}}
+.scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:4px 16px 28px}
+.scroll.pad-top{padding-top:calc(var(--sat) + 22px)}
+.screen[data-tabs]:not(.pad-tabs) .scroll{padding-bottom:calc(var(--tabs-h) + var(--sab) + 28px)}
+.screen.pad-tabs{padding-bottom:calc(var(--tabs-h) + var(--sab))}
+.topbar{flex:none;display:flex;align-items:center;gap:8px;min-height:52px;padding:calc(var(--sat) + 4px) 12px 4px;background:var(--bg);position:relative;z-index:2}
+.topbar.app{padding-left:16px;justify-content:space-between}
+.topbar-title{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.topbar .mid{position:absolute;left:108px;right:108px;bottom:16px;text-align:center;font-weight:600;font-size:15.5px;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.back-btn{display:inline-flex;align-items:center;min-height:44px;padding:0 10px 0 0;border-radius:12px;font-weight:600;color:var(--brand);font-size:16px}
+.back-btn .ic{width:26px;height:26px}
+.icon-btn{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;color:var(--ink-2)}
+.icon-btn:active{background:rgba(0,0,0,.05)}
+.footer-actions{flex:none;display:grid;gap:8px;padding:12px 16px calc(var(--sab) + 12px);background:var(--bg);border-top:1px solid var(--line-2)}
+
+/* ---------- type ---------- */
+h1{font-size:26px;line-height:1.18;letter-spacing:-.022em;font-weight:700;margin:2px 0 8px}
+h2{font-size:18px;line-height:1.3;letter-spacing:-.012em;font-weight:650}
+h3{font-size:15px;line-height:1.35;font-weight:650}
+p{margin:0}
+.lead{font-size:15.5px;color:var(--ink-2);line-height:1.5}
+.muted{color:var(--muted)}
+.sub{display:block;font-size:13.5px;color:var(--muted);line-height:1.4;font-weight:400;margin-top:2px}
+.fine{font-size:12.5px;color:var(--muted);line-height:1.45}
+.center{text-align:center}
+.eyebrow{font-size:12.5px;font-weight:600;color:var(--muted);margin:6px 0 2px}
+.section-title{display:flex;align-items:center;gap:8px;margin:26px 2px 10px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--ai);color:#fff;font-size:11.5px;letter-spacing:0}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}
+.row{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.stack{display:grid;gap:10px}
+
+/* ---------- brand ---------- */
+.logo{width:28px;height:28px;flex:none}
+.logo-row{display:flex;align-items:center;gap:9px}
+.wordmark{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px;color:#fff;flex:none;letter-spacing:.02em}
+.avatar.sm{width:36px;height:36px;font-size:12.5px}
+.av-hcp{background:var(--hcp)}
+.av-mkt{background:var(--mkt)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 18px;border-radius:14px;font-weight:600;font-size:15.5px;background:var(--brand);color:#fff;transition:transform .12s ease,background-color .2s ease;text-align:center;line-height:1.25}
+.btn:active{transform:scale(.98)}
+.btn.block{width:100%}
+.btn.secondary{background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.ghost{background:transparent;color:var(--brand);min-height:44px}
+.btn.ai{background:linear-gradient(135deg,var(--ai),var(--ai-2))}
+.btn.danger{background:var(--danger)}
+.btn.sm{min-height:38px;font-size:14px;padding:0 13px;border-radius:11px}
+.btn[disabled]{opacity:.42;pointer-events:none}
+.btn .ic{width:18px;height:18px}
+.btn-row{display:flex;gap:10px}
+.btn-row.two > *{flex:1}
+.danger-text{color:var(--danger)!important}
+.link{display:inline-flex;align-items:center;gap:4px;min-height:36px;color:var(--brand);font-weight:600;font-size:14.5px}
+.link.inline{min-height:0;display:inline;font-size:inherit}
+.link .ic{width:16px;height:16px}
+
+/* ---------- chips ---------- */
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:4px 11px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);color:var(--ink-2);line-height:1.2}
+.chip .ic{width:14px;height:14px}
+.chip.ai{background:var(--ai-soft);box-shadow:none;color:var(--ai-ink)}
+.chip.brand{background:var(--brand-soft);box-shadow:none;color:var(--brand-ink)}
+.chip.ok{background:var(--ok-soft);box-shadow:none;color:var(--ok)}
+.chip.warn{background:var(--warn-soft);box-shadow:none;color:var(--warn)}
+.chip.tiny{min-height:22px;padding:2px 8px;font-size:11.5px}
+button.chip[aria-pressed="true"]{background:var(--brand);color:#fff;box-shadow:none}
+.chips-wrap{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ---------- cards ---------- */
+.card{display:block;background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.card + .card{margin-top:12px}
+.card.flat{box-shadow:none;background:var(--surface-2)}
+.ai-rule{box-shadow:inset 3px 0 0 var(--ai),var(--shadow)}
+.card-link{display:block;width:100%;color:inherit}
+.card-link:active{opacity:.75}
+.card-link h2{margin:6px 0 4px}
+.kicker{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--brand-ink)}
+.kicker .ic{width:15px;height:15px}
+.kicker.ai{color:var(--ai-ink)}
+.kicker.warn{color:var(--warn)}
+.kicker.ask{color:var(--hcp)}
+.feed-meta{display:block;font-size:13px;color:var(--muted);line-height:1.5}
+.card.is-read .feed-meta::before{content:"✓ Done";color:#1E7A46;font-weight:700;margin-right:10px}
+.card.is-read h2{color:var(--ink-2)}
+.feed-meta > span + span::before{content:"\00a0\00a0·\00a0\00a0"}
+.from{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-2);font-size:13px;color:var(--ink-2);font-weight:500}
+.from .ic{width:16px;height:16px;color:var(--hcp)}
+.why{display:inline-flex;align-items:center;gap:6px;min-height:36px;margin-top:6px;font-size:13px;font-weight:600;color:var(--ai-ink)}
+.why .ic{width:15px;height:15px}
+.card-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;flex-wrap:wrap}
+.card-actions .why{margin-top:0}
+.done-pill{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:0 12px;border-radius:11px;background:var(--ok-soft);color:var(--ok);font-weight:600;font-size:14px}
+.done-pill .ic{width:16px;height:16px}
+
+/* ---------- switches & form rows ---------- */
+.list-card{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);padding:0 16px}
+.list-card > * + *{border-top:1px solid var(--line-2)}
+.switch-row{display:flex;align-items:center;gap:14px;padding:14px 0;cursor:pointer;position:relative}
+.switch-row > span:first-child{flex:1;min-width:0}
+.switch-row input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.switch{width:51px;height:31px;border-radius:999px;background:#D3CCC2;position:relative;flex:none;transition:background-color .2s ease}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.22);transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+.switch-row input:checked + .switch{background:var(--brand)}
+.switch-row input:checked + .switch::after{transform:translateX(20px)}
+.switch-row input:focus-visible + .switch{outline:2px solid var(--brand);outline-offset:2px}
+.pref-block{padding:14px 0}
+.pref-block > strong{display:block;margin-bottom:10px}
+.pref-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;min-height:56px}
+.pref-row > label,.pref-row > div:first-child{font-weight:600}
+.selects{display:flex;gap:6px}
+select.input,.select{appearance:none;-webkit-appearance:none;background:var(--surface-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2366717B' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;border:1px solid var(--line);border-radius:10px;padding:8px 30px 8px 10px;font-size:14px;font-weight:500;min-height:38px}
+.seg{display:flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg label{flex:1;position:relative}
+.seg input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.seg span{display:grid;place-items:center;min-height:36px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--muted);text-align:center;padding:0 4px;line-height:1.2}
+.seg input:checked + span{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(20,32,43,.12)}
+.seg input:focus-visible + span{outline:2px solid var(--brand);outline-offset:1px}
+.row-link{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;font-weight:600;color:var(--ink)}
+.row-link > span{flex:1}
+.row-link .ic:first-child{color:var(--brand)}
+.row-link .ic:last-child{color:var(--muted);width:18px;height:18px}
+.input{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:15px;line-height:1.45;resize:none}
+.input:focus{outline:2px solid var(--brand);outline-offset:0;border-color:transparent}
+.f-label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:16px 0 6px}
+.radios{border:0;padding:0;display:grid;gap:2px}
+.radios label,.check-row{display:flex;align-items:center;gap:10px;min-height:42px;font-size:15px}
+.radios input,.check-row input{width:20px;height:20px;accent-color:var(--brand);flex:none;margin:0}
+.check-row{align-items:flex-start;padding:12px;margin:14px 0;background:var(--surface-2);border-radius:12px;font-size:14px;line-height:1.4}
+.check-row input{margin-top:1px}
+
+/* ---------- toast & sheet ---------- */
+.toast{position:absolute;z-index:80;left:16px;right:16px;bottom:calc(var(--sab) + var(--tabs-h) + 14px);margin:0 auto;max-width:360px;padding:12px 16px;border-radius:14px;background:#17232E;color:#fff;font-size:14px;font-weight:500;line-height:1.4;box-shadow:0 10px 30px rgba(0,0,0,.22);transform:translateY(14px);opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease}
+.toast.show{opacity:1;transform:none}
+.sheet-layer{position:absolute;inset:0;z-index:70;display:flex;align-items:flex-end;background:rgba(10,16,24,0);transition:background-color .22s ease}
+.sheet-layer.open{background:rgba(10,16,24,.44)}
+.sheet{position:relative;width:100%;max-height:90%;overflow-y:auto;overscroll-behavior:contain;background:var(--surface);border-radius:24px 24px 0 0;padding:8px 20px calc(var(--sab) + 20px);transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.sheet-layer.open .sheet{transform:none}
+.grabber{width:40px;height:5px;border-radius:3px;background:#DDD6CC;margin:2px auto 12px}
+.sheet-close{position:absolute;top:10px;right:10px}
+#sheetBody > h2:first-child,#sheetBody > .kicker:first-child + h2{padding-right:40px}
+#sheetBody h2{margin:6px 0 8px}
+#sheetBody > p{margin-bottom:10px}
+.reasons{list-style:none;display:grid;gap:10px;margin:12px 0 16px}
+.reasons li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.45}
+.reasons li .ic{width:18px;height:18px;margin-top:2px;color:var(--brand)}
+.reasons.dots li{display:block;position:relative;padding-left:16px}
+.reasons.dots li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--brand)}
+.notice-grid{display:grid;gap:12px;margin:12px 0 16px}
+.notice-grid > div{padding:12px 14px;border-radius:14px;background:var(--surface-2)}
+.notice-grid strong{display:block;font-size:13px;margin-bottom:2px}
+.notice-grid p{font-size:14px;color:var(--ink-2);line-height:1.45}
+
+/* ---------- measurement lens ---------- */
+.mtag{display:none;align-items:center;gap:6px;max-width:100%;width:max-content;margin:8px 0 2px;padding:3px 8px 3px 4px;border-radius:7px;font-size:11px;font-weight:700;letter-spacing:.01em;line-height:1.3}
+.mtag::before{content:"L" attr(data-l);display:inline-grid;place-items:center;min-width:22px;height:18px;padding:0 3px;border-radius:5px;background:rgba(255,255,255,.22);font-size:10.5px}
+.mtag[data-l="1"]{background:var(--l1);color:var(--l1-ink)}
+.mtag[data-l="1"]::before{background:rgba(138,47,47,.12)}
+.mtag[data-l="2"]{background:var(--l2);color:#fff}
+.mtag[data-l="3"]{background:var(--l3);color:#fff}
+.mtag[data-l="4"]{background:var(--l4);color:#fff}
+.lens .mtag{display:inline-flex}
+
+/* ---------- tab bars ---------- */
+.tabbar{position:absolute;z-index:30;left:0;right:0;bottom:0;display:flex;padding-bottom:var(--sab);background:rgba(255,255,255,.93);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-top:1px solid var(--line)}
+.tab{flex:1;min-height:var(--tabs-h);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted);text-align:center}
+.tab .ic{width:23px;height:23px}
+.tab[aria-current="page"]{color:var(--brand)}
+
+/* ---------- start ---------- */
+.start-hero{padding:6px 2px 4px}
+.start-hero .wordmark{font-size:22px}
+.start-hero .logo{width:36px;height:36px}
+.display{font-size:28px;line-height:1.15;letter-spacing:-.025em;margin:22px 0 10px}
+.tagline{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:6px 10px;border-radius:10px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.role-list{display:grid;gap:10px;margin:24px 0 8px}
+.role-card{display:flex;align-items:center;gap:14px;width:100%;padding:16px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line-2);box-shadow:var(--shadow)}
+.role-card:active{transform:scale(.99)}
+.role-txt{flex:1;display:grid;gap:1px;font-size:13.5px;color:var(--muted);line-height:1.35}
+.role-txt strong{font-size:16px;color:var(--ink)}
+.role-kicker{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.role-card:first-child .role-kicker{color:var(--hcp)}
+.role-card:last-child .role-kicker{color:var(--mkt)}
+.role-card > .ic{color:var(--muted)}
+.lens-card{margin-top:14px}
+.lens-legend{display:flex;gap:4px;margin-top:6px}
+.lens-legend span{font-size:10.5px;font-weight:700;padding:2px 6px;border-radius:5px}
+
+/* ---------- lock screen ---------- */
+.lock{background:radial-gradient(120% 70% at 15% 0%,#2C7F79 0%,transparent 60%),radial-gradient(110% 70% at 100% 100%,#40418F 0%,transparent 62%),#0F1B2B;color:#fff}
+.lock-inner{flex:1;display:flex;flex-direction:column;align-items:center;padding:calc(var(--sat) + 40px) 14px calc(var(--sab) + 24px)}
+.lock-ic{width:18px;height:18px;opacity:.85}
+.clock{font-size:84px;font-weight:600;letter-spacing:-.04em;line-height:1;margin-top:8px}
+.date{font-size:18px;font-weight:500;opacity:.9;margin-top:6px}
+.notif{margin-top:44px;width:100%;max-width:380px;display:grid;gap:2px;text-align:left;color:#fff;padding:13px 15px;border-radius:22px;background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);animation:notifIn .55s .25s both,pulse 2.4s 1.2s ease-in-out infinite}
+.notif strong{font-size:15px;line-height:1.3}
+.notif > span:last-child{font-size:14.5px;opacity:.92;line-height:1.35}
+.notif-head{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;opacity:.85;margin-bottom:4px}
+.notif-app{display:inline-flex;align-items:center;gap:7px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:12px}
+.notif-app .logo{width:20px;height:20px}
+@keyframes notifIn{from{opacity:0;transform:translateY(-12px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}50%{box-shadow:0 0 0 6px rgba(255,255,255,.08)}}
+.lock-hint{margin-top:auto;font-size:13px;opacity:.72;display:flex;align-items:center;gap:6px}
+.lock-exit{position:absolute;z-index:3;top:calc(var(--sat) + 6px);left:12px;display:inline-flex;align-items:center;gap:2px;min-height:36px;padding:0 10px 0 4px;border-radius:10px;color:rgba(255,255,255,.8);font-size:13.5px;font-weight:600}
+.lock-exit .ic{width:20px;height:20px}
+.lock .mtag{margin-top:14px}
+
+/* ---------- consent ---------- */
+.consent-note{margin:10px 2px 0;font-size:13.5px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.consent-note.on{color:var(--brand-ink);font-weight:600}
+.never{display:flex;gap:12px;align-items:flex-start;margin-top:16px;padding:14px}
+.never .ic{color:var(--brand);margin-top:1px}
+.never p{font-size:14px;line-height:1.45;color:var(--ink-2)}
+
+/* ---------- briefing ---------- */
+.banner{display:flex;gap:10px;align-items:flex-start;margin:14px 0 4px;padding:12px 14px;border-radius:14px;background:var(--warn-soft);color:#6B3A0E;font-size:14px;line-height:1.45}
+.banner .ic{color:var(--warn);margin-top:1px}
+.held{display:flex;gap:10px;align-items:center;width:100%;margin:12px 0 2px;padding:9px 12px;border-radius:16px;background:var(--brand-soft);color:var(--brand-ink);text-align:left}
+.held-txt{flex:1;min-width:0}
+.held .sub{color:var(--brand-ink);opacity:.82;display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.held-txt strong{font-size:14.5px}
+.held-ic{width:30px;height:30px;border-radius:9px;background:#fff;display:grid;place-items:center;flex:none}
+.feed{margin-top:14px}
+.endcap{text-align:center;padding:26px 16px 6px;color:var(--muted);font-size:14px;line-height:1.5}
+.endcap-ic{width:40px;height:40px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;background:var(--ok-soft);color:var(--ok)}
+.endcap strong{color:var(--ink)}
+
+/* ---------- content item ---------- */
+.item-title{font-size:24px}
+.callout{display:flex;gap:12px;align-items:flex-start;margin:16px 0 4px;padding:14px;border-radius:14px;background:#FBF1EA;color:#5C2F18}
+.callout .ic{color:var(--hcp);margin-top:2px}
+.callout blockquote{font-size:15px;font-weight:600;line-height:1.4}
+.callout figcaption,.callout p{font-size:13px;line-height:1.45;margin-top:4px;color:#7A4A31}
+.callout.plain{background:var(--surface-2);color:var(--ink-2)}
+.callout.plain p{margin:0;color:var(--ink-2);font-size:14px}
+.callout.plain .ic{color:var(--muted)}
+.item-body{margin-top:16px;padding:16px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line-2)}
+.item-body > p{color:var(--ink-2);margin-bottom:10px}
+.points{list-style:none;counter-reset:pt;display:grid;gap:12px}
+.points li{counter-increment:pt;display:grid;grid-template-columns:26px 1fr;gap:10px;font-size:15px;line-height:1.45}
+.points li::before{content:counter(pt);width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand-ink);font-weight:700;font-size:13px}
+.cite{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;margin-left:5px;border-radius:6px;background:var(--ai-soft);color:var(--ai-ink);font-size:11.5px;font-weight:700;vertical-align:1px;line-height:1}
+button.cite:active{background:var(--ai);color:#fff}
+.src{display:flex;gap:10px;align-items:flex-start;width:100%;padding:10px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line-2);font-size:13.5px;line-height:1.4;text-align:left}
+.src .cite{margin:1px 0 0}
+.src strong{font-weight:600}
+.rate h3{margin-bottom:12px}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.scale-btn{display:grid;place-items:center;height:46px;border-radius:12px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);font-weight:700;font-size:16px;color:var(--ink-2)}
+.scale-btn[aria-pressed="true"]{background:var(--brand);color:#fff;box-shadow:none}
+.scale-legend{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+.rate-msg{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:14px;font-weight:600;color:var(--ink-2)}
+.rate-msg.ok{color:var(--ok)}
+.rate .chips-wrap{margin-top:10px}
+
+/* ---------- ask / chat ---------- */
+.disclosure{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--ai-soft);color:#3B2A99;font-size:13.5px;line-height:1.45}
+.disclosure .ic{color:var(--ai);margin-top:1px;width:18px;height:18px}
+.ctx{display:flex;align-items:center;gap:8px;margin-top:12px;padding:6px 6px 6px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:13.5px;color:var(--ink-2)}
+.ctx > span{flex:1;min-width:0}
+.ctx .icon-btn{width:34px;height:34px}
+.chat{display:flex;flex-direction:column;gap:12px;padding-top:14px}
+.msg{max-width:90%;border-radius:18px;padding:12px 14px;font-size:15px;line-height:1.45;animation:fade .25s ease}
+.msg.user{align-self:flex-end;background:var(--brand);color:#fff;border-bottom-right-radius:6px}
+.msg.ai{align-self:flex-start;background:var(--surface);border:1px solid var(--line-2);border-bottom-left-radius:6px;box-shadow:var(--shadow);min-width:62%}
+.msg.ai.guard{box-shadow:inset 3px 0 0 var(--warn),var(--shadow)}
+.msg.ai p + p,.msg.ai p + ul,.msg.ai ul + p{margin-top:8px}
+.msg.ai ul{padding-left:18px;display:grid;gap:4px}
+.msg.ai p.fine{margin-top:10px}
+.msg.sys{align-self:center;display:flex;gap:8px;align-items:center;background:var(--ok-soft);color:var(--ok);font-size:13px;font-weight:600;border-radius:14px;padding:9px 14px;max-width:100%}
+.msg.sys .ic{width:16px;height:16px}
+.note{align-self:flex-end;display:flex;gap:6px;align-items:center;max-width:90%;font-size:12.5px;color:var(--ok);font-weight:600;margin-top:-6px;animation:fade .25s ease}
+.note .ic{width:15px;height:15px}
+.ai-head{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:12px;font-weight:700;color:var(--ai-ink);margin-bottom:6px;letter-spacing:.02em}
+.ai-head .ic{width:15px;height:15px}
+.guard-tag{margin-left:auto;padding:2px 8px;border-radius:999px;background:var(--warn-soft);color:var(--warn);font-size:11px}
+.steps{list-style:none;display:grid;gap:7px;font-size:13.5px;color:var(--muted)}
+.steps li{display:flex;gap:8px;align-items:center}
+.steps .ic{width:15px;height:15px;color:var(--ok)}
+.spin{width:15px;height:15px;flex:none;border-radius:50%;border:2px solid var(--ai-soft);border-top-color:var(--ai);animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.steps-done{font-size:12.5px;color:var(--muted);margin-bottom:8px;display:flex;gap:6px;align-items:center}
+.steps-done .ic{width:14px;height:14px;color:var(--ok)}
+.srcs{display:grid;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line-2)}
+.srcs-label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.msg .src{background:var(--surface-2);border-color:transparent;padding:8px 10px;font-size:13px}
+.msg-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.helpful{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--muted)}
+.helpful .chip{min-height:30px}
+.suggest{display:grid;gap:8px;margin-top:16px}
+.suggest-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 2px}
+.suggest button{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:14px;background:var(--surface);border:1px solid #DCD3FB;color:var(--ai-ink);font-size:14.5px;font-weight:500;line-height:1.4;text-align:left}
+.suggest button .ic{width:16px;height:16px;margin-top:2px}
+.suggest button:active{background:var(--ai-soft)}
+.composer{flex:none;display:flex;gap:8px;align-items:flex-end;padding:10px 12px;background:var(--bg);border-top:1px solid var(--line)}
+.composer-hint{flex:none;display:flex;gap:6px;align-items:center;margin:0;padding:8px 16px 0;font-size:12.5px;color:var(--muted);background:var(--bg);border-top:1px solid var(--line)}
+.composer-hint .ic{width:14px;height:14px;color:var(--brand)}
+.composer-hint:not([hidden]) + .composer{border-top:0;padding-top:6px}
+.composer textarea{flex:1;min-height:44px;max-height:120px;border:1px solid var(--line);background:var(--surface);border-radius:22px;padding:11px 16px;font-size:15px;line-height:1.4;resize:none;outline:none}
+.composer textarea:focus{border-color:var(--ai)}
+.send{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--ai);color:#fff;flex:none}
+.send .ic{width:19px;height:19px}
+.composer.busy .send{opacity:.4;pointer-events:none}
+.off-card{margin-top:4px}
+.off-card h2{margin-bottom:6px}
+.off-card p{margin-bottom:14px}
+.sys-inline{display:flex;gap:6px;align-items:center;margin-top:12px;color:var(--ok);font-weight:600;font-size:14px}
+
+/* ---------- you / data ---------- */
+.profile{display:flex;align-items:center;gap:12px}
+.profile strong{font-size:16px}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;font-size:14.5px}
+.kv > span:first-child{color:var(--muted)}
+.kv > span:last-child{font-weight:600;text-align:right}
+.demo-zone{margin-top:24px;padding-top:16px;border-top:1px dashed var(--line);text-align:center}
+
+/* ---------- marketing ---------- */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.kpi-tile{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:16px;background:var(--surface);border:1px solid var(--line-2)}
+.kpi-tile .l{font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.3}
+.kpi-tile .v{font-size:25px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.2}
+.kpi-tile .v small{font-size:14px;color:var(--muted);font-weight:600}
+.kpi-tile .d{font-size:12px;font-weight:600;color:var(--ok);line-height:1.3}
+.kpi-tile .d.n{color:var(--muted);font-weight:500}
+.kpi-tile .mtag{margin-top:6px}
+.insight h2{font-size:17px}
+.gap-pill{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:4px 10px;border-radius:999px;background:var(--warn-soft);color:var(--warn);font-size:12.5px;font-weight:700}
+.gap-pill.ok{background:var(--ok-soft);color:var(--ok)}
+.gap-pill .ic{width:14px;height:14px}
+.decided{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--ink-2)}
+.decided .ic{color:var(--ok)}
+.decided.dim .ic{color:var(--muted)}
+.decided strong{display:block;color:var(--ink)}
+.timeback{display:flex;gap:12px;align-items:center;margin-top:12px}
+.timeback .ic{color:var(--brand)}
+.row-between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.trend{font-size:12.5px;font-weight:700;color:var(--ok)}
+.spark{width:100%;height:58px;margin:10px 0 6px;display:block}
+.bars{display:grid;gap:10px;margin-top:6px}
+.bar{display:grid;grid-template-columns:1fr auto;gap:4px 8px;font-size:13.5px}
+.bar b{font-variant-numeric:tabular-nums}
+.bar-track{grid-column:1/-1;height:8px;border-radius:4px;background:var(--line-2);overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--ai),var(--ai-2))}
+.privacy-line{display:flex;gap:8px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--ink-2);line-height:1.45}
+.privacy-line .ic{width:16px;height:16px;color:var(--brand);margin-top:1px}
+.quotes{display:grid;gap:8px}
+.quote{padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line-2)}
+.quote blockquote{font-size:15px;font-weight:500;line-height:1.4}
+.quote figcaption{font-size:12px;color:var(--muted);margin-top:4px}
+.cov{display:flex;gap:12px;align-items:flex-start;padding:12px 0;font-size:14.5px}
+.cov .ic{margin-top:1px}
+.cov.ok .ic{color:var(--ok)}
+.cov.gap .ic{color:var(--warn)}
+.field-note{display:flex;gap:12px;align-items:center;margin-top:12px}
+.field-note .ic{color:var(--mkt)}
+.reco{margin-top:12px}
+.reco p{margin-top:6px;font-size:15px;line-height:1.5}
+.gen{display:flex;flex-direction:column;align-items:center;text-align:center;padding:48px 8px 20px}
+.gen-orb{width:68px;height:68px;border-radius:22px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--ai),var(--ai-2));box-shadow:0 12px 30px -8px rgba(106,76,245,.6);animation:breathe 1.6s ease-in-out infinite}
+.gen-orb .ic{width:30px;height:30px}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.gen h2{margin:18px 0 14px}
+.gen-steps{list-style:none;display:grid;gap:10px;text-align:left;font-size:14.5px;color:var(--muted)}
+.gen-steps li{display:flex;gap:10px;align-items:center}
+.gen-steps li::before{content:"";width:16px;height:16px;border-radius:50%;border:2px solid var(--line);flex:none}
+.gen-steps li.active{color:var(--ink)}
+.gen-steps li.active::before{border-color:var(--ai-soft);border-top-color:var(--ai);animation:spin .75s linear infinite}
+.gen-steps li.done{color:var(--ink-2)}
+.gen-steps li.done::before{border:0;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l3 3 5-6' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center}
+.brief-out.reveal > *{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+.brief-out.reveal > *:nth-child(2){animation-delay:.05s}.brief-out.reveal > *:nth-child(3){animation-delay:.1s}.brief-out.reveal > *:nth-child(4){animation-delay:.16s}.brief-out.reveal > *:nth-child(5){animation-delay:.22s}.brief-out.reveal > *:nth-child(6){animation-delay:.28s}.brief-out.reveal > *:nth-child(7){animation-delay:.34s}.brief-out.reveal > *:nth-child(8){animation-delay:.4s}.brief-out.reveal > *:nth-child(9){animation-delay:.46s}.brief-out.reveal > *:nth-child(10){animation-delay:.52s}.brief-out.reveal > *:nth-child(11){animation-delay:.58s}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.field{margin-top:4px}
+.f-val{padding:10px 12px;border-radius:12px;background:var(--surface);border:1px dashed var(--line);font-size:15px;line-height:1.45;outline:none}
+.f-val:focus,.claims [contenteditable]:focus{border-style:solid;border-color:var(--ai);background:#fff}
+.claims{list-style:none;display:grid;gap:8px}
+.claims li{padding:10px 12px;border-radius:12px;background:var(--surface);border:1px dashed var(--line);display:grid;gap:6px;font-size:15px;line-height:1.4}
+.claims li > span:first-child{outline:none;border:1px solid transparent;border-radius:6px}
+.claims .chip{justify-self:start}
+.timer{display:flex;gap:10px;align-items:flex-start;margin-top:16px;padding:12px 14px}
+.timer .ic{color:var(--ai);margin-top:1px}
+.timer p{font-size:14px;line-height:1.45;color:var(--ink-2)}
+.timeline{list-style:none;display:grid;gap:0;margin-top:16px;position:relative}
+.timeline li{display:grid;grid-template-columns:40px 1fr;gap:12px;position:relative;padding-bottom:16px}
+.timeline li:not(:last-child)::after{content:"";position:absolute;left:19px;top:42px;bottom:0;width:2px;background:var(--line)}
+.tl-dot{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;color:#fff}
+.tl-dot.field{background:var(--hcp)}
+.tl-dot.app{background:linear-gradient(135deg,var(--ai),var(--ai-2))}
+.tl-dot.std{background:#8A939B}
+.tl-body{padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line-2)}
+.tl-when{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.tl-body p{font-size:14px;color:var(--ink-2);margin:4px 0 8px;line-height:1.45}
+.tl-body p:last-child{margin-bottom:0}
+.rules > div{display:flex;gap:10px;align-items:center;padding:11px 0;font-size:14.5px}
+.rules .ic{color:var(--ok);width:18px;height:18px}
+.compare{display:flex;align-items:center;justify-content:space-around;gap:10px;margin-top:12px;text-align:center}
+.compare .big{display:block;font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.compare .old .big{color:var(--muted);text-decoration:line-through;text-decoration-thickness:2px}
+.compare .new .big{color:var(--brand)}
+.compare .sub{font-size:12.5px;max-width:120px}
+.compare > .ic{color:var(--muted)}
+.done-badge{width:72px;height:72px;border-radius:24px;margin:8px auto 14px;display:grid;place-items:center;background:var(--ok);color:#fff;box-shadow:0 14px 30px -10px rgba(28,116,68,.6);animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+.done-badge .ic{width:34px;height:34px}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+.loop{list-style:none;display:grid;gap:0}
+.loop li{display:grid;grid-template-columns:36px 1fr;gap:12px;padding:10px 0;position:relative}
+.loop li:not(:last-child)::after{content:"";position:absolute;left:17px;top:46px;bottom:-10px;width:2px;background:var(--line)}
+.loop-ic{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;position:relative;z-index:1}
+.loop-ic.field{background:var(--hcp)}.loop-ic.ai{background:linear-gradient(135deg,var(--ai),var(--ai-2))}.loop-ic.mkt{background:var(--mkt)}.loop-ic.mlr{background:#5E6A74}.loop-ic.hcp{background:var(--brand)}
+.loop strong{font-size:15px}
+.pipe-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0}
+.pipe-row strong{font-size:14.5px}
+.status{flex:none;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.status.amber{background:var(--warn-soft);color:var(--warn)}
+.status.green{background:var(--ok-soft);color:var(--ok)}
+.status.gray{background:var(--line-2);color:var(--ink-2)}
+.status.teal{background:var(--brand-soft);color:var(--brand-ink)}
+.new-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ai);margin-right:6px;vertical-align:1px}
+
+/* ---------- native-app feel ---------- */
+html{touch-action:manipulation}
+body{overscroll-behavior:none}
+.device{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.device .msg,.device .item-body,.device blockquote,.device input,.device textarea,.device [contenteditable="true"]{-webkit-user-select:text;user-select:text}
+.device a,.device button{-webkit-touch-callout:none}
+.device .scroll,.device .sheet{scrollbar-width:none}
+.device .scroll::-webkit-scrollbar,.device .sheet::-webkit-scrollbar{display:none}
+.composer textarea,.input,select.input,.select,.f-val,.claims li{font-size:16px} /* <16px makes iOS zoom on focus */
+.spacer{flex:1}
+.topbar{transition:box-shadow .2s ease}
+.topbar.scrolled{box-shadow:0 1px 0 var(--line)}
+.topbar .mid.auto{opacity:0;transition:opacity .2s ease}
+.topbar.titled .mid.auto{opacity:1}
+.topbar .bl{transition:opacity .2s ease}
+.topbar.titled:has(.mid.auto) .bl{opacity:0}
+.topbar .link{min-height:44px;padding:0 6px;font-size:16px}
+.cite{position:relative}
+.cite::after{content:"";position:absolute;inset:-10px -6px}
+.why{min-height:40px}
+.row-link:active,.src:active,.held:active,.role-card:active,.notif:active,.back-btn:active{opacity:.6}
+.tab .ic{transition:transform .12s ease}
+.tab:active .ic{transform:scale(.88)}
+.icon-btn[aria-pressed="true"]{--bm-fill:currentColor;color:var(--brand)}
+.center-row{justify-content:center;margin-top:0}
+.device.kb-open .tabbar{display:none}
+.device.kb-open .screen.pad-tabs{padding-bottom:0}
+.splash{position:absolute;inset:0;z-index:85;display:grid;place-items:center;background:var(--bg)}
+.splash .logo{height:76px;filter:drop-shadow(0 14px 24px rgba(243,102,51,.28))}
+.splash.in{animation:fade .16s ease both}
+.splash.in .logo{animation:splashIn .45s cubic-bezier(.2,.8,.2,1) both}
+.splash.out{animation:fadeOut .26s ease both}
+@keyframes splashIn{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+.install-hint{display:flex;gap:12px;align-items:center;margin-top:12px;padding:14px}
+.install-hint > .ic{color:var(--brand)}
+.install-hint > div{flex:1;min-width:0;font-size:14px;line-height:1.4}
+
+/* ---------- GSKGO additions ---------- */
+/* lockup: official GSK logo + 'go' on the gsk letters' baseline and x-height (measured: x-height .332, baseline .625 of logo height) */
+.logo-row{--lh:28px;align-items:flex-start}
+.logo-row img.logo{height:var(--lh)!important}
+.logo-row > .chip{align-self:center}
+.start-hero .logo-row{--lh:36px}
+.splash .logo-row{--lh:76px}
+.wordmark .go{display:block;font-family:Georgia,'Times New Roman',serif;font-weight:700;font-style:normal;letter-spacing:-.01em;font-size:calc(var(--lh) * .69);line-height:1;margin-top:calc(var(--lh) * .039);color:#1F3F8F}
+img.logo{width:auto!important;object-fit:contain;display:block}
+.splash .logo-row{gap:10px}
+.logo-row{gap:5px}
+.notif-app img.logo{height:18px}
+.banner .link.inline,.endcap .link.inline{display:inline-flex;align-items:center;min-height:40px;padding:0 2px}
+.banner.info{background:var(--brand-soft);color:var(--brand-ink)}
+.banner.info .ic{color:var(--brand)}
+.assemble{display:flex;flex-direction:column;align-items:center;text-align:center;padding:36px 8px 10px}
+.assemble .gen-orb{width:58px;height:58px;border-radius:19px}
+.assemble h2{margin:16px 0 12px;font-size:17px}
+.brief-content.reveal > *{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+.brief-content.reveal > *:nth-child(2){animation-delay:.06s}.brief-content.reveal > *:nth-child(3){animation-delay:.12s}.brief-content.reveal > *:nth-child(4){animation-delay:.18s}
+.ae-row{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;margin-top:16px;padding:10px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line-2);font-size:14.5px;font-weight:600;color:var(--danger);text-align:left}
+.ae-row .ic{color:var(--danger)}
+.ae-row span{flex:1}
+.ae-row .ic:last-child{color:var(--muted);width:18px;height:18px}
+.field-err{color:#B42318;font-size:13.5px;font-weight:600;margin:8px 0 0}
+.input[aria-invalid="true"]{border-color:#B42318}
+.never.compact{margin:14px 0 4px;padding:10px 12px}
+.never.compact p{font-size:13.5px}
+.verify-card{margin-top:18px}
+.verify-card .input{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.verified{display:flex;gap:12px;align-items:center;margin-top:14px;padding:14px;border-radius:14px;background:var(--ok-soft);color:var(--ok);font-weight:600;font-size:14.5px;animation:pop .4s cubic-bezier(.2,1.4,.4,1) both}
+.verified .sub{color:#2E6B47}
+.checking{display:flex;gap:10px;align-items:center;margin-top:14px;font-size:14px;color:var(--muted)}
+.rule-group{margin-top:4px}
+.rule-group .chips-wrap .chip{min-height:40px;font-size:14px;padding:6px 14px}
+.select.wide{width:100%;min-height:46px;font-size:16px}
+.result{margin-top:18px;border-width:1px}
+.result .status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:13px;font-weight:700}
+.result .status-pill .ic{width:16px;height:16px}
+.result .status-pill.ok{background:var(--ok-soft);color:var(--ok)}
+.result .status-pill.part{background:var(--brand-soft);color:var(--brand-ink)}
+.result .status-pill.no{background:var(--line-2);color:var(--ink-2)}
+.result h2{margin:10px 0 6px;font-size:19px}
+.result .kv{padding:10px 0;border-top:1px solid var(--line-2)}
+.result p.sub{margin-bottom:6px}
+.qr-box{display:grid;place-items:center;width:232px;height:232px;margin:14px auto 8px;padding:14px;background:#fff;border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow)}
+.qr-box svg,.qr-box img{width:100%;height:100%;display:block}
+.qr-fallback{font-size:13px;color:var(--muted);text-align:center;line-height:1.45}
+.northstar{display:grid;gap:4px;margin-top:12px;padding:14px;border-radius:16px;background:#14202B;color:#fff}
+.northstar .l{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#F7B48F}
+.northstar .v{font-size:15px;font-weight:600;line-height:1.4}
+.northstar .sub{color:#C9D2DA}
+.tab{font-size:11px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="logo" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F36633"/><path d="M10.5 9.5l7 6.5-7 6.5M17 9.5l7 6.5-7 6.5" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-rules" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H6.5A1.5 1.5 0 0 0 5 6.5v13A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 17.5 5H15"/><rect x="9" y="3" width="6" height="4" rx="1.2"/><path d="M8.5 13l2.2 2.2 4.8-4.8"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.4v.1"/></symbol>
+  <symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="currentColor"><path d="M11 2.5l2 5.9 5.9 2-5.9 2L11 18.3l-2-5.9-5.9-2 5.9-2z"/><path d="M18.6 14.2l.9 2.5 2.5.9-2.5.9-.9 2.5-.9-2.5-2.5-.9 2.5-.9z"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M8 8.5h8M8 12.5h8M8 16.5h5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="7.5" r="3.5"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></symbol>
+  <symbol id="i-group" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="9" cy="8" r="3.3"/><path d="M2.8 19.5a6.2 6.2 0 0 1 12.4 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16.2 14.2a5 5 0 0 1 5.3 5.3"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 7.9-7.5 9.5-4.3-1.6-7.5-4.9-7.5-9.5V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6.2 7.2V18l-3.6 2v-7.8z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.1"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 11.1L19.6 4c.8-.3 1.6.5 1.2 1.3l-7 16.2c-.4.8-1.6.8-1.9-.1l-1.8-5.6-5.6-1.8c-.9-.3-.9-1.5-.1-1.9z"/></symbol>
+  <symbol id="i-quote" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11.5C4 8 6.2 5.6 9.3 5l.6 1.6c-1.7.6-2.7 1.9-2.8 3.4H10v6H4zm10 0C14 8 16.2 5.6 19.3 5l.6 1.6c-1.7.6-2.7 1.9-2.8 3.4H20v6h-6z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M6.5 3h7.5l4.5 4.5V21h-12z"/><path d="M14 3v4.5h4.5M9 12.5h6M9 16h6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 20V11M10 20V5M15 20v-6M20 20V8.5"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3.5l8.5 4.5-8.5 4.5L3.5 8z"/><path d="M3.5 12.5l8.5 4.5 8.5-4.5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M4 7l8 6 8-6"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4L21 19.5H3z"/><path d="M12 10v4.5M12 17.2v.1"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5v4.8h-4.8"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6v12M15 6v12"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M7 3.5h10a1 1 0 0 1 1 1v16l-6-4-6 4v-16a1 1 0 0 1 1-1z" style="fill:var(--bm-fill,none)"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></symbol>
+</svg>
+
+<noscript><p style="padding:24px">This prototype needs JavaScript turned on.</p></noscript>
+
+<div class="stage">
+  <div class="device" id="device">
+    <div class="statusbar" aria-hidden="true">
+      <span id="sbTime">8:12</span>
+      <span class="sb-icons">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.2-1.3A10.4 10.4 0 0 0 8 .4C5.2.4 2.6 1.5.8 3.3L2 4.6a8.6 8.6 0 0 1 6-2.4zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.7 6.7 0 0 0 8 4c-1.8 0-3.4.7-4.6 1.8l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3zm0 3.6c-.6 0-1.1.2-1.5.6L8 11.6l1.5-1.6c-.4-.4-.9-.6-1.5-.6z"/></svg>
+        <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x=".5" y=".5" width="23" height="12" rx="3.5" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2" fill="currentColor"/><path d="M25 4.5v4c.8-.3 1.3-1.1 1.3-2s-.5-1.7-1.3-2z" fill="currentColor" opacity=".5"/></svg>
+      </span>
+    </div>
+    <div class="island" aria-hidden="true"></div>
+
+    <!-- ===================== START ===================== -->
+    <section class="screen" data-screen="start" tabindex="-1" aria-label="Demo start">
+      <div class="scroll pad-top">
+        <div class="start-hero">
+          <div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span></div>
+          <h1 class="display">Your region’s vaccination briefing, in 2 minutes.</h1>
+          <p class="lead">Primary-care doctors get one short weekly briefing on who their region covers, built only from approved content. Marketing turns field and digital signals into one coordinated action.</p>
+          <span class="tagline"><svg class="ic" style="width:15px;height:15px"><use href="#i-layers"/></svg>Concept prototype · Track B: Marketing &amp; omnichannel · Team 3</span>
+        </div>
+        <div class="role-list">
+          <button class="role-card" data-act="start-hcp">
+            <span class="avatar av-hcp">LM</span>
+            <span class="role-txt"><span class="role-kicker">The doctor</span><strong>Dra. Lucía Martín</strong><span>Family doctor, public health centre · Madrid</span></span>
+            <svg class="ic"><use href="#i-chev"/></svg>
+          </button>
+          <button class="role-card" data-act="start-mkt">
+            <span class="avatar av-mkt">JO</span>
+            <span class="role-txt"><span class="role-kicker">Marketing</span><strong>Javier Ortega</strong><span>Brand Manager, Adult vaccines · Spain</span></span>
+            <svg class="ic"><use href="#i-chev"/></svg>
+          </button>
+        </div>
+        <div class="card flat install-hint" id="installHint" hidden>
+          <svg class="ic"><use href="#i-phone"/></svg>
+          <div><strong>Make it feel like a real app</strong><span class="sub" id="installText"></span></div>
+          <button class="btn sm" id="installBtn" data-act="install" hidden>Install</button>
+        </div>
+        <div class="list-card lens-card">
+          <label class="switch-row">
+            <span><strong>Measurement lens</strong><span class="sub">Tag each screen with the KPI it feeds, from functional to strategic.</span>
+              <span class="lens-legend" aria-hidden="true"><span style="background:var(--l1);color:var(--l1-ink)">L1</span><span style="background:var(--l2);color:#fff">L2</span><span style="background:var(--l3);color:#fff">L3</span><span style="background:var(--l4);color:#fff">L4</span></span>
+            </span>
+            <input type="checkbox" role="switch" data-lens>
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+        </div>
+        <p class="fine mt16">Student concept for the IE MDBI × GSK business case (Team 3). Fictional persona. Figures marked “illustrative” are simulated; public figures cite their source. AI is simulated. Not affiliated with or endorsed by GSK.</p>
+      </div>
+    </section>
+
+    <!-- ===================== HCP: LOCK SCREEN ===================== -->
+    <section class="screen lock" data-screen="lock" data-status="light" tabindex="-1" aria-label="Phone lock screen">
+      <button class="lock-exit" data-go="start" data-dir="back"><svg class="ic"><use href="#i-back"/></svg>Demo</button>
+      <div class="lock-inner">
+        <svg class="ic lock-ic"><use href="#i-lock"/></svg>
+        <div class="clock">8:12</div>
+        <div class="date" data-if="!loop">Monday 5 October</div>
+        <div class="date" data-if="loop">Monday 19 October</div>
+        <button class="notif" data-act="open-notif">
+          <span class="notif-head"><span class="notif-app"><img class="logo" src="gsk-logo.png" alt="GSK">GSKGO</span><span>now</span></span>
+          <strong data-if="!onboarded&amp;!loop">Your vaccination briefing · 2 min</strong>
+          <strong data-if="onboarded&amp;!loop">Your weekly briefing · 2 min</strong>
+          <strong data-if="loop">You asked, we answered · 1 new item</strong>
+          <span data-if="!loop">Who your region covers for shingles this season.</span>
+          <span data-if="loop">A second-dose reminder card for your patients, approved this week.</span>
+        </button>
+        <span class="mtag" data-l="1">Functional · open rate at the time she chose</span>
+        <p class="lock-hint">Tap the notification to open</p>
+      </div>
+    </section>
+
+    <!-- ===================== HCP: VERIFY ===================== -->
+    <section class="screen" data-screen="verify" tabindex="-1" aria-labelledby="verifyTitle">
+      <header class="topbar"><button class="back-btn" data-back="lock"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button></header>
+      <div class="scroll">
+        <div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span></div>
+        <h1 id="verifyTitle" class="mt16">For healthcare professionals only</h1>
+        <p class="lead">Information about medicines may only reach qualified professionals, so we check your colegiado number once.</p>
+        <span class="mtag" data-l="1">Functional · time to verified access</span>
+        <div class="card verify-card">
+          <label class="f-label" for="colegiado" style="margin-top:0">Colegiado number</label>
+          <input id="colegiado" class="input" inputmode="numeric" value="28/2812345" aria-describedby="verifyHint">
+          <p class="field-err" id="verifyErr" role="alert" hidden>That doesn’t look like a colegiado number. Use the format 28/2812345.</p>
+          <p class="fine mt8" id="verifyHint">Prefilled for the demo. Checked against the Colegio de Médicos register (simulated).</p>
+          <div class="checking" id="verifyChecking" hidden><span class="spin"></span>Checking the register…</div>
+          <div class="verified" id="verifyOk" hidden><svg class="ic"><use href="#i-check"/></svg><div>Verified healthcare professional<span class="sub">Dra. Lucía Martín · Family medicine · Comunidad de Madrid</span></div></div>
+        </div>
+        <div class="card flat never"><svg class="ic"><use href="#i-shield"/></svg><p>We use your number only to confirm you’re a doctor and which region you work in. <strong>Nothing about your patients, ever.</strong></p></div>
+      </div>
+      <div class="footer-actions">
+        <button class="btn block" data-act="verify">Verify and continue</button>
+      </div>
+    </section>
+
+    <!-- ===================== HCP: CONSENT ===================== -->
+    <section class="screen" data-screen="consent" tabindex="-1" aria-labelledby="consentTitle">
+      <header class="topbar"><button class="back-btn" data-back="verify"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button></header>
+      <div class="scroll">
+        <div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span></div>
+        <h1 id="consentTitle" class="mt16">One 2-minute briefing instead of scattered messages</h1>
+        <p class="lead">GSKGO puts what GSK has for you into one short weekly briefing for your region, and holds back anything that isn’t useful. You decide what it may use.</p>
+        <span class="mtag" data-l="4">Strategic · opt-in / consent rate</span>
+        <div class="card flat never compact"><svg class="ic"><use href="#i-shield"/></svg><p><strong>Never used:</strong> patient data or bought data. <strong>Never sold.</strong> Change it any time in two taps.</p></div>
+        <h2 class="section-title">Choose what GSKGO can use</h2>
+        <div class="list-card">
+          <label class="switch-row"><span><strong>Personalise my briefing</strong><span class="sub">Use the topics I choose and what I open or rate.</span></span><input type="checkbox" role="switch" data-consent="personal"><span class="switch" aria-hidden="true"></span></label>
+          <label class="switch-row"><span><strong>Connect with Laura, my GSK rep</strong><span class="sub">She sees what I read and ask, so we don’t repeat ourselves, and I won’t get emails about what she’s already covered.</span></span><input type="checkbox" role="switch" data-consent="rep"><span class="switch" aria-hidden="true"></span></label>
+          <label class="switch-row"><span><strong>AI-assisted answers</strong> <span class="chip ai tiny">AI</span><span class="sub">AI finds answers in GSK-approved content only, always with sources. Never about individual patients.</span></span><input type="checkbox" role="switch" data-consent="ai"><span class="switch" aria-hidden="true"></span></label>
+        </div>
+        <p class="consent-note" id="consentSummary">Nothing is on until you switch it on.</p>
+        <button class="link mt8" data-sheet="privacy">Read the privacy notice · 2 min <svg class="ic"><use href="#i-chev"/></svg></button>
+      </div>
+      <div class="footer-actions">
+        <button class="btn block" data-act="consent-continue">Continue</button>
+        <button class="btn secondary block" data-act="consent-skip">Skip: send me the standard briefing</button>
+      </div>
+    </section>
+
+    <!-- ===================== HCP: BRIEFING ===================== -->
+    <section class="screen" data-screen="briefing" data-tabs="hcp" tabindex="-1" aria-labelledby="briefTitle">
+      <header class="topbar app">
+        <div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span></div>
+        <button class="avatar av-hcp sm" data-go="you" data-dir="tab" aria-label="Your preferences and privacy">LM</button>
+      </header>
+      <div class="scroll">
+        <p class="eyebrow" data-if="!loop">Mon 5 Oct · Comunidad de Madrid · <span id="readProg">3 items · 2 min</span></p>
+        <p class="eyebrow" data-if="loop">Mon 19 Oct · Comunidad de Madrid · 1 new item</p>
+        <h1 id="briefTitle">Good morning, Dra. Martín</h1>
+        <span class="mtag" data-l="1">Functional · time to first useful item</span>
+
+        <div class="assemble" id="assemble" hidden aria-live="polite">
+          <div class="gen-orb"><svg class="ic"><use href="#i-spark"/></svg></div>
+          <h2 id="assembleTitle">Assembling your briefing from 38 approved modules</h2>
+          <ol class="gen-steps" id="assembleSteps"></ol>
+        </div>
+        <div class="brief-content" id="briefContent">
+
+        <div class="banner" data-if="!personal">
+          <svg class="ic"><use href="#i-info"/></svg>
+          <p><strong>Standard briefing:</strong> the same for every GP in Spain, in a fixed order. <button class="link inline" data-go="you" data-dir="tab">Personalise it</button></p>
+        </div>
+
+        <button class="held" data-if="held" data-sheet="held">
+          <span class="held-ic"><svg class="ic"><use href="#i-filter"/></svg></span>
+          <span class="held-txt"><strong><span data-text="heldCount">4</span> messages held back this month</strong><span class="sub" data-text="heldWhy">2 Laura covered · 2 off-topic</span></span>
+          <svg class="ic"><use href="#i-chev"/></svg>
+        </button>
+        <span class="mtag" data-l="3" data-if="held">ROI · duplicate touches avoided</span>
+
+        <div class="feed">
+          <article class="card ai-rule" data-if="loop">
+            <a class="card-link" href="#/item:reminder" data-go="item:reminder">
+              <span class="kicker ask"><svg class="ic"><use href="#i-person"/></svg>New · You asked, we answered</span>
+              <h2>A second-dose reminder card for your patients</h2>
+              <span class="feed-meta"><span>1 min read</span><span>Approved 16 Oct 2026</span></span>
+            </a>
+            <span class="mtag" data-l="4">Strategic · insight-to-action loop closed</span>
+          </article>
+
+          <article class="card" data-if="personal">
+            <a class="card-link" href="#/item:region" data-go="item:region">
+              <span class="kicker">Your region · Comunidad de Madrid</span>
+              <h2>Who Madrid covers for shingles in 2026</h2>
+              <span class="feed-meta"><span>1 min read</span><span>+ quick check</span></span>
+            </a>
+            <button class="why" data-sheet="why" data-why="region"><svg class="ic"><use href="#i-spark"/></svg>Why am I seeing this?</button>
+            <span class="mtag" data-l="1">Functional · rule found in under 2 min</span>
+          </article>
+          <article class="card" data-if="!personal">
+            <a class="card-link" href="#/item:national" data-go="item:national">
+              <span class="kicker">National update</span>
+              <h2>Shingles vaccination in Spain: who the national calendar recommends</h2>
+              <span class="feed-meta"><span>1 min read</span><span>Ministerio de Sanidad</span></span>
+            </a>
+          </article>
+
+          <article class="card">
+            <a class="card-link" href="#/item:second" data-go="item:second">
+              <span class="kicker ask" data-if="rep"><svg class="ic"><use href="#i-person"/></svg>You asked for this</span>
+              <span class="kicker" data-if="!rep">Practice tip · second dose</span>
+              <h2>Second doses: who’s due, and a 30-second reminder</h2>
+              <span class="feed-meta"><span>2 min read</span><span>+ patient QR</span></span>
+              <span class="from" data-if="rep"><svg class="ic"><use href="#i-person"/></svg>From your visit with Laura Gómez · Tue 29 Sep</span>
+            </a>
+            <button class="why" data-sheet="why" data-why="second" data-if="rep"><svg class="ic"><use href="#i-spark"/></svg>Why am I seeing this?</button>
+            <span class="mtag" data-l="4" data-if="rep">Strategic · continuity across channels</span>
+          </article>
+
+          <article class="card" data-if="personal">
+            <span class="kicker">Fits your evenings</span>
+            <h2 class="mt8">Live webinar: shingles, flu and RSV at the same visit</h2>
+            <span class="feed-meta"><span>Thu 15 Oct · 20:30</span><span>30 min · online</span></span>
+            <div class="card-actions">
+              <button class="btn sm" data-act="seat" data-if="!seat"><svg class="ic"><use href="#i-calendar"/></svg>Save a seat</button>
+              <span class="done-pill" data-if="seat"><svg class="ic"><use href="#i-check"/></svg>Seat saved</span>
+              <button class="why" data-sheet="why" data-why="webinar"><svg class="ic"><use href="#i-spark"/></svg>Why?</button>
+            </div>
+            <span class="mtag" data-l="3">ROI · cost per engaged HCP</span>
+          </article>
+          <article class="card" data-if="!personal">
+            <a class="card-link" href="#/item:coadmin" data-go="item:coadmin">
+              <span class="kicker">Autumn campaign</span>
+              <h2>Shingles and flu vaccines at the same visit</h2>
+              <span class="feed-meta"><span>1 min read</span><span>Product information</span></span>
+            </a>
+          </article>
+        </div>
+
+        <div class="endcap">
+          <div class="endcap-ic"><svg class="ic"><use href="#i-check"/></svg></div>
+          <strong>You’re all caught up.</strong><br>
+          <span data-if="!paused">Next briefing: Mon 12 Oct, 08:10 · <button class="link inline" data-go="you" data-dir="tab">change</button></span>
+          <span data-if="paused">Briefings paused until Wed 4 Nov · <button class="link inline" data-go="you" data-dir="tab">resume</button></span>
+        </div>
+        <button class="ae-row" data-sheet="ae"><svg class="ic"><use href="#i-alert"/></svg><span>Report a suspected side effect</span><svg class="ic"><use href="#i-chev"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== HCP: CONTENT ITEM ===================== -->
+    <section class="screen" data-screen="item" data-tabs="hcp" data-tabroot="briefing" tabindex="-1" aria-label="Briefing item">
+      <header class="topbar"><button class="back-btn" data-back="briefing"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Briefing</span></button><span class="mid auto" id="itemMid"></span><span class="spacer"></span><button class="icon-btn" id="bookmarkBtn" data-act="bookmark" aria-pressed="false" aria-label="Save to your library"><svg class="ic"><use href="#i-bookmark"/></svg></button></header>
+      <div class="scroll" id="itemBody"></div>
+    </section>
+
+    <!-- ===================== HCP: CHECK RULES ===================== -->
+    <section class="screen" data-screen="rules" data-tabs="hcp" tabindex="-1" aria-labelledby="rulesTitle">
+      <header class="topbar app"><button class="back-btn" id="rulesBack" data-back="briefing" hidden><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button><h1 class="topbar-title" id="rulesTitle">Check rules</h1><span class="chip brand tiny">Shingles · 2026</span></header>
+      <div class="scroll">
+        <div class="banner info"><svg class="ic"><use href="#i-info"/></svg><p><strong>Reference only, not a clinical decision tool.</strong> Pick a group, never a patient: no names, IDs or dates of birth.</p></div>
+        <span class="mtag" data-l="1">Functional · rule found in under 2 min</span>
+        <label class="f-label" for="selRegion">Region</label>
+        <select id="selRegion" class="select wide" data-rule="region">
+          <option value="mad">Comunidad de Madrid</option>
+          <option value="b">Region B (demo data)</option>
+          <option value="c">Region C (demo data)</option>
+        </select>
+        <div class="rule-group">
+          <span class="f-label" id="ageLbl">Age group</span>
+          <div class="chips-wrap" role="group" aria-labelledby="ageLbl">
+            <button class="chip" data-act="rule" data-k="age" data-v="u50">Under 50</button>
+            <button class="chip" data-act="rule" data-k="age" data-v="50-64">50–64</button>
+            <button class="chip" data-act="rule" data-k="age" data-v="65-80">65–80</button>
+            <button class="chip" data-act="rule" data-k="age" data-v="o80">Over 80</button>
+          </div>
+        </div>
+        <div class="rule-group">
+          <span class="f-label" id="riskLbl">Risk condition</span>
+          <div class="chips-wrap" role="group" aria-labelledby="riskLbl">
+            <button class="chip" data-act="rule" data-k="risk" data-v="none">None</button>
+            <button class="chip" data-act="rule" data-k="risk" data-v="tx">Transplant</button>
+            <button class="chip" data-act="rule" data-k="risk" data-v="imm">Immunosuppressive treatment</button>
+            <button class="chip" data-act="rule" data-k="risk" data-v="ep">2+ previous episodes</button>
+          </div>
+        </div>
+        <div class="card result" id="ruleResult" aria-live="polite"></div>
+        <div class="stack mt16">
+          <button class="btn block" data-sheet="qr"><svg class="ic"><use href="#i-qr"/></svg>Show the patient leaflet (QR)</button>
+          <button class="btn secondary block" data-go="item:second">Second dose: 30-second reminder</button>
+        </div>
+        <span class="mtag" data-l="3">ROI · rep calls avoided for rule questions</span>
+        <p class="fine mt12">Rules simplified for the prototype from the regional adult vaccination calendar. Regions B and C use demo data. In production, rules are loaded from each region’s official calendar and checked by GSK Medical.</p>
+      </div>
+    </section>
+
+    <!-- ===================== HCP: ASK ===================== -->
+    <section class="screen pad-tabs" data-screen="ask" data-tabs="hcp" tabindex="-1" aria-labelledby="askTitle">
+      <header class="topbar app">
+        <button class="back-btn" id="askBack" data-back="briefing" hidden><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button>
+        <h1 class="topbar-title" id="askTitle">Ask</h1>
+        <span class="chip ai"><svg class="ic"><use href="#i-spark"/></svg>AI assistant</span>
+      </header>
+      <div class="scroll" id="askScroll">
+        <div class="disclosure" data-if="ai"><svg class="ic"><use href="#i-info"/></svg><p>You’re using an <strong>AI assistant</strong>. It only returns answers GSK Medical has already approved, with sources. It can’t advise on individual patients. Possible side effects go straight to Pharmacovigilance.</p></div>
+        <span class="mtag" data-l="1" data-if="ai">Functional · time to a sourced answer</span>
+        <span class="mtag" data-l="3" data-if="ai">ROI · cost per qualified interaction</span>
+        <div class="ctx" id="askCtx" hidden></div>
+        <div class="chat" id="chatLog" data-if="ai" aria-live="polite"></div>
+        <div class="suggest" id="suggest" data-if="ai"></div>
+        <div class="card off-card" data-if="!ai">
+          <h2>AI-assisted answers are off</h2>
+          <p class="muted">You chose not to use the AI assistant, and that’s fine. A GSK medical advisor (a person) can answer instead, usually within 2 working days.</p>
+          <div class="stack">
+            <button class="btn block" data-act="open-mi">Ask a medical advisor</button>
+            <button class="btn secondary block" data-act="ai-on">Turn on AI-assisted answers</button>
+          </div>
+          <p class="sys-inline" data-if="mi"><svg class="ic"><use href="#i-check"/></svg>Request sent · reply by Wed 7 Oct</p>
+          <span class="mtag" data-l="2">Emotional · a valid alternative without AI</span>
+        </div>
+      </div>
+      <p class="composer-hint" data-if="ai"><svg class="ic"><use href="#i-shield"/></svg>No patient names or IDs. We remove them automatically.</p>
+      <form class="composer" id="composer" data-if="ai" autocomplete="off">
+        <label class="vh" for="askInput">Your question</label>
+        <textarea id="askInput" rows="1" placeholder="Ask about GSK-approved content…" enterkeyhint="send"></textarea>
+        <button class="send" type="submit" aria-label="Send question"><svg class="ic"><use href="#i-send"/></svg></button>
+      </form>
+    </section>
+
+    <!-- ===================== HCP: YOU / PREFERENCES ===================== -->
+    <section class="screen" data-screen="you" data-tabs="hcp" tabindex="-1" aria-labelledby="youTitle">
+      <header class="topbar app"><h1 class="topbar-title" id="youTitle">Me</h1></header>
+      <div class="scroll">
+        <div class="card flat profile"><span class="avatar av-hcp">LM</span><div><strong>Dra. Lucía Martín</strong><div class="muted">Family medicine · Comunidad de Madrid · verified</div></div></div>
+        <span class="mtag" data-l="4">Strategic · consent kept at 6 months</span>
+
+        <h2 class="section-title">Your briefing</h2>
+        <div class="list-card">
+          <div class="pref-block">
+            <strong>Topics</strong>
+            <div class="chips-wrap">
+              <button class="chip" data-act="topic" aria-pressed="true">Shingles</button>
+              <button class="chip" data-act="topic" aria-pressed="true">RSV in older adults</button>
+              <button class="chip" data-act="topic" aria-pressed="true">Flu &amp; COVID campaign</button>
+              <button class="chip" data-act="topic" aria-pressed="false">Pneumococcal</button>
+              <button class="chip" data-act="topic" aria-pressed="false">Asthma &amp; COPD</button>
+              <button class="chip" data-act="topic" aria-pressed="false">Oncology</button>
+            </div>
+          </div>
+          <div class="pref-block">
+            <strong id="freqLabel">How often</strong>
+            <div class="seg" role="radiogroup" aria-labelledby="freqLabel">
+              <label><input type="radio" name="freq" value="weekly" data-pref checked><span>Weekly</span></label>
+              <label><input type="radio" name="freq" value="2w" data-pref><span>Every 2 weeks</span></label>
+              <label><input type="radio" name="freq" value="monthly" data-pref><span>Monthly</span></label>
+            </div>
+          </div>
+          <div class="pref-row">
+            <label for="selDay">Delivered</label>
+            <div class="selects">
+              <select id="selDay" class="select" data-pref><option selected>Mon</option><option>Tue</option><option>Wed</option><option>Thu</option><option>Fri</option></select>
+              <select class="select" data-pref aria-label="Delivery time"><option selected>08:10</option><option>13:30</option><option>20:30</option></select>
+            </div>
+          </div>
+          <label class="switch-row"><span><strong>App notification</strong></span><input type="checkbox" role="switch" data-pref checked><span class="switch" aria-hidden="true"></span></label>
+          <label class="switch-row"><span><strong>Email copy</strong><span class="sub">A plain-text copy of each briefing</span></span><input type="checkbox" role="switch" data-pref><span class="switch" aria-hidden="true"></span></label>
+          <div class="pref-row">
+            <label for="selRep">Rep visits</label>
+            <select id="selRep" class="select" data-pref><option selected>About once a month</option><option>Every 2 weeks</option><option>Only when I ask</option><option>Remote only</option></select>
+          </div>
+          <div class="pref-row">
+            <div><strong>Need a break?</strong><span class="sub" data-if="!paused">Pause everything for 30 days</span><span class="sub" data-if="paused">Paused until Wed 4 Nov</span></div>
+            <button class="btn sm secondary" data-act="pause"><svg class="ic" data-if="!paused"><use href="#i-pause"/></svg><span data-if="!paused">Pause</span><span data-if="paused">Resume</span></button>
+          </div>
+        </div>
+
+        <h2 class="section-title">Privacy &amp; AI</h2>
+        <div class="list-card">
+          <label class="switch-row"><span><strong>Personalise my briefing</strong><span class="sub">Topics you choose + what you open or rate</span></span><input type="checkbox" role="switch" data-consent="personal"><span class="switch" aria-hidden="true"></span></label>
+          <label class="switch-row"><span><strong>Connect with Laura, my GSK rep</strong><span class="sub">Shared activity, no duplicate messages</span></span><input type="checkbox" role="switch" data-consent="rep"><span class="switch" aria-hidden="true"></span></label>
+          <label class="switch-row"><span><strong>AI-assisted answers</strong><span class="sub">Approved content only, always with sources</span></span><input type="checkbox" role="switch" data-consent="ai"><span class="switch" aria-hidden="true"></span></label>
+          <button class="row-link" data-go="data"><svg class="ic"><use href="#i-eye"/></svg><span>What GSKGO knows about you</span><svg class="ic"><use href="#i-chev"/></svg></button>
+          <button class="row-link" data-sheet="privacy"><svg class="ic"><use href="#i-shield"/></svg><span>Privacy notice</span><svg class="ic"><use href="#i-chev"/></svg></button>
+          <button class="row-link" data-act="unsub-all"><svg class="ic"><use href="#i-mail"/></svg><span>Unsubscribe from everything</span><svg class="ic"><use href="#i-chev"/></svg></button>
+        </div>
+        <button class="ae-row" data-sheet="ae"><svg class="ic"><use href="#i-alert"/></svg><span>Report a suspected side effect</span><svg class="ic"><use href="#i-chev"/></svg></button>
+
+        <div class="demo-zone">
+          <button class="btn ghost" data-go="start" data-dir="back"><svg class="ic"><use href="#i-back"/></svg>Back to demo start</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== HCP: MY DATA ===================== -->
+    <section class="screen" data-screen="data" data-tabs="hcp" data-tabroot="you" tabindex="-1" aria-labelledby="dataTitle">
+      <header class="topbar"><button class="back-btn" data-back="you"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Me</span></button><span class="mid auto">Your data</span></header>
+      <div class="scroll">
+        <h1 id="dataTitle">What GSKGO knows about you</h1>
+        <p class="lead">Everything we hold, in plain language. Nothing about your patients, ever.</p>
+        <span class="mtag" data-l="2">Emotional · trust in how data is used</span>
+
+        <div data-if="personal">
+          <h2 class="section-title">You told us</h2>
+          <div class="list-card">
+            <div class="kv"><span>Topics</span><span>Shingles, RSV, flu &amp; COVID</span></div>
+            <div class="kv"><span>Region</span><span>Comunidad de Madrid</span></div>
+            <div class="kv"><span>Briefing</span><span>Weekly · Mon 08:10</span></div>
+            <div class="kv"><span>Events</span><span>Online, after 20:00</span></div>
+          </div>
+        </div>
+
+        <div data-if="personal">
+          <h2 class="section-title">From your activity · last 90 days</h2>
+          <div class="list-card">
+            <div class="kv"><span>Items opened</span><span>9</span></div>
+            <div class="kv"><span>Items rated</span><span>6 · average 4.2 / 5</span></div>
+            <div class="kv"><span>Questions asked</span><span>2</span></div>
+          </div>
+          <div data-if="!inferRemoved">
+            <h2 class="section-title">Inferred by AI</h2>
+            <div class="card">
+              <span class="chip ai tiny"><svg class="ic"><use href="#i-spark"/></svg>AI inference</span>
+              <h3 class="mt8">Prefers short, practical formats</h3>
+              <p class="sub">Based on what you open. Used only to rank your briefing.</p>
+              <button class="link" data-act="remove-inference">Not right? Remove it</button>
+            </div>
+          </div>
+        </div>
+
+        <div data-if="rep&amp;!repRemoved">
+          <h2 class="section-title">Shared by your rep</h2>
+          <div class="card">
+            <span class="chip ai tiny"><svg class="ic"><use href="#i-spark"/></svg>AI-drafted · approved by Laura</span>
+            <h3 class="mt8">Visit summary · Tue 29 Sep</h3>
+            <p class="sub">Discussed second doses for patients vaccinated in spring. Agreed: Laura to send something simple to remind patients. Interested in evening webinars.</p>
+            <button class="link" data-act="remove-summary">Remove this summary</button>
+          </div>
+        </div>
+
+        <div class="card flat mt16" data-if="!personal&amp;!rep"><p class="muted">Beyond your name, colegiado number, region and contact details, GSKGO holds nothing about you.</p></div>
+
+        <div class="stack mt20">
+          <button class="btn secondary block" data-act="download-data"><svg class="ic"><use href="#i-download"/></svg>Download a copy</button>
+          <button class="btn secondary block danger-text" data-sheet="delete"><svg class="ic"><use href="#i-trash"/></svg>Delete everything</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== MARKETING: HOME ===================== -->
+    <section class="screen" data-screen="m-home" data-tabs="mkt" tabindex="-1" aria-labelledby="mTitle">
+      <header class="topbar app">
+        <div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span><span class="chip brand tiny">Marketing</span></div>
+        <button class="avatar av-mkt sm" data-sheet="m-menu" aria-label="Account menu">JO</button>
+      </header>
+      <div class="scroll">
+        <p class="eyebrow">Adult vaccines · Spain · week 41</p>
+        <h1 id="mTitle">Good morning, Javier</h1>
+        <div class="kpis">
+          <div class="kpi-tile"><span class="l">Relevance score</span><span class="v">4.3<small>/5</small></span><span class="d">▲ 0.4 vs Q2</span><span class="mtag" data-l="2">Emotional</span></div>
+          <div class="kpi-tile"><span class="l">Engaged GPs</span><span class="v">1,184</span><span class="d n">opted in · active 90 days</span><span class="mtag" data-l="4">Strategic</span></div>
+          <div class="kpi-tile"><span class="l">Consent rate</span><span class="v">61%</span><span class="d">▲ 7 pts since launch</span><span class="mtag" data-l="4">Strategic</span></div>
+          <div class="kpi-tile"><span class="l">Duplicate touches avoided</span><span class="v" data-text="avoided">312</span><span class="d n">this month</span><span class="mtag" data-l="3">ROI</span></div>
+        </div>
+        <p class="fine mt8">Illustrative data</p>
+        <div class="northstar">
+          <span class="l">North star · two-dose shingles coverage at 65</span>
+          <span class="v">Spain 26.2% (2024) → national target 75% by 2030</span>
+          <span class="sub">Measured in pilot vs matched control areas with public Ministry data. Each +1 pp at 65 ≈ €1.45M a year (team assumption).</span>
+        </div>
+        <span class="mtag" data-l="4">Strategic · coverage uplift vs control</span>
+
+        <h2 class="section-title">Needs your decision <span class="count" data-text="pending">3</span></h2>
+
+        <article class="card insight ai-rule">
+          <a class="card-link" href="#/m-insight" data-go="m-insight">
+            <span class="kicker ai"><svg class="ic"><use href="#i-spark"/></svg>Emerging need · high confidence</span>
+            <h2>GPs keep asking how to bring patients back for the second dose</h2>
+            <span class="feed-meta"><span>169 signals in 14 days</span><span>rep visits + GSKGO</span></span>
+            <span class="gap-pill" data-if="!submitted"><svg class="ic"><use href="#i-warn"/></svg>Content gap found</span>
+            <span class="gap-pill ok" data-if="submitted"><svg class="ic"><use href="#i-check"/></svg>Brief in MLR review</span>
+          </a>
+        </article>
+
+        <article class="card insight">
+          <button class="card-link" data-sheet="m-fatigue" data-if="!fatigueDone">
+            <span class="kicker warn"><svg class="ic"><use href="#i-warn"/></svg>Fatigue risk</span>
+            <h2>‘Shingles awareness’ emails are wearing out</h2>
+            <span class="feed-meta"><span>Relevance 2.1/5</span><span>214 GPs already heard it from their rep</span></span>
+          </button>
+          <div class="decided" data-if="fatigueA"><svg class="ic"><use href="#i-check"/></svg><span><strong>‘Shingles awareness’ paused for 214 GPs</strong>Their reps already covered it</span></div>
+          <div class="decided dim" data-if="fatigueD"><svg class="ic"><use href="#i-close"/></svg><span><strong>‘Shingles awareness’: no change</strong>We’ll ask again if the signal grows</span></div>
+        </article>
+
+        <article class="card insight">
+          <button class="card-link" data-sheet="m-channel" data-if="!channelDone">
+            <span class="kicker"><svg class="ic"><use href="#i-calendar"/></svg>Channel fit</span>
+            <h2>Evening webinars draw 3× more GPs</h2>
+            <span class="feed-meta"><span>36% attend at 20:30</span><span>12% at 13:30</span></span>
+          </button>
+          <div class="decided" data-if="channelA"><svg class="ic"><use href="#i-check"/></svg><span><strong>Q4 webinars moved to 20:30</strong>Registered GPs notified</span></div>
+          <div class="decided dim" data-if="channelD"><svg class="ic"><use href="#i-close"/></svg><span><strong>Webinar times unchanged</strong>We’ll ask again if the signal grows</span></div>
+        </article>
+
+        <div class="card flat timeback">
+          <svg class="ic"><use href="#i-clock"/></svg>
+          <div><strong>About 6 hours back this week</strong><span class="sub">Automated: 2 audience list pulls · 1 weekly performance report</span></div>
+        </div>
+        <span class="mtag" data-l="3">ROI · Marketing hours saved</span>
+      </div>
+    </section>
+
+    <!-- ===================== MARKETING: INSIGHT ===================== -->
+    <section class="screen" data-screen="m-insight" tabindex="-1" aria-labelledby="miTitle">
+      <header class="topbar"><button class="back-btn" data-back="m-home"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Insights</span></button><span class="mid auto">Second doses</span></header>
+      <div class="scroll">
+        <span class="kicker ai"><svg class="ic"><use href="#i-spark"/></svg>AI insight · high confidence</span>
+        <h1 id="miTitle" class="mt8">Second doses for shingles</h1>
+        <p class="lead">GPs want a simple way to bring patients back for dose two, and the question is growing fast.</p>
+        <button class="why" data-sheet="m-method"><svg class="ic"><use href="#i-info"/></svg>How was this found?</button>
+        <span class="mtag" data-l="4">Strategic · field insights reused by Marketing</span>
+
+        <div class="card mt12">
+          <div class="row-between"><h3>What we’re hearing</h3><span class="trend">▲ 3.4× vs previous 14 days</span></div>
+          <svg class="spark" viewBox="0 0 300 58" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="sg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#6A4CF5" stop-opacity=".25"/><stop offset="1" stop-color="#6A4CF5" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0 52 L30 50 L60 51 L90 47 L120 48 L150 42 L180 38 L210 30 L240 24 L270 14 L300 6 L300 58 L0 58Z" fill="url(#sg)"/>
+            <path d="M0 52 L30 50 L60 51 L90 47 L120 48 L150 42 L180 38 L210 30 L240 24 L270 14 L300 6" fill="none" stroke="#6A4CF5" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <div class="bars">
+            <div class="bar"><span>Questions asked in GSKGO</span><b>118</b><div class="bar-track"><div class="bar-fill" style="width:70%"></div></div></div>
+            <div class="bar"><span>Rep visit summaries</span><b>42</b><div class="bar-track"><div class="bar-fill" style="width:25%"></div></div></div>
+            <div class="bar"><span>Webinar Q&amp;A</span><b>9</b><div class="bar-track"><div class="bar-fill" style="width:6%"></div></div></div>
+          </div>
+          <p class="privacy-line"><svg class="ic"><use href="#i-shield"/></svg>From 136 GPs. Names, centres and patient details removed. Only GPs who agreed to share are included.</p>
+        </div>
+        <div class="card flat mt12 field-note"><svg class="ic"><use href="#i-chart"/></svg><p><strong>Public data agrees:</strong> at 65, 33.4% had a first dose but only 26.2% both doses (Ministerio de Sanidad, SIV 2024).</p></div>
+
+        <h2 class="section-title">What GPs are saying</h2>
+        <div class="quotes">
+          <figure class="quote"><blockquote>“Patients forget the second appointment. Anything simple I can give them?”</blockquote><figcaption>GP · Madrid region · rep visit</figcaption></figure>
+          <figure class="quote"><blockquote>“How do I spot who’s overdue without extra work?”</blockquote><figcaption>GP · Castilla y León · GSKGO question</figcaption></figure>
+          <figure class="quote"><blockquote>“If they missed the 2-month date, is it too late?”</blockquote><figcaption>GP · Andalucía · webinar Q&amp;A</figcaption></figure>
+        </div>
+        <p class="fine mt8">Paraphrased by AI from de-identified notes.</p>
+
+        <h2 class="section-title">What we already have</h2>
+        <div class="list-card">
+          <div class="cov ok"><svg class="ic"><use href="#i-check"/></svg><span><strong>Shingles by region: HCP summary</strong> · ES-HZ-0926-011<span class="sub">Relevance 4.6 / 5</span></span></div>
+          <div class="cov ok"><svg class="ic"><use href="#i-check"/></svg><span><strong>Second dose: practice guide</strong> · ES-HZ-0926-014<span class="sub">412 opens</span></span></div>
+          <div class="cov gap"><svg class="ic"><use href="#i-warn"/></svg><span><strong>Nothing patients take home with the second-dose date</strong><span class="sub">The most-requested format in these signals</span></span></div>
+        </div>
+
+        <div class="card flat field-note"><svg class="ic"><use href="#i-group"/></svg><p><strong>28 of these GPs</strong> see their rep in the next 7 days.</p></div>
+
+        <div class="card reco ai-rule">
+          <span class="kicker ai"><svg class="ic"><use href="#i-spark"/></svg>Recommended next step</span>
+          <p>Create a <strong>one-page second-dose reminder card</strong> for patients, with a QR to the Ministry’s patient Q&amp;A. Reps hand it over at the 28 upcoming visits; everyone else gets it in their GSKGO briefing. <strong>No new email.</strong></p>
+        </div>
+      </div>
+      <div class="footer-actions">
+        <button class="btn ai block" data-go="m-brief"><svg class="ic"><use href="#i-spark"/></svg>Draft the content brief</button>
+        <button class="btn ghost block" data-act="snooze">Not now</button>
+      </div>
+    </section>
+
+    <!-- ===================== MARKETING: AI BRIEF ===================== -->
+    <section class="screen" data-screen="m-brief" tabindex="-1" aria-labelledby="mbTitle">
+      <header class="topbar"><button class="back-btn" data-back="m-insight"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Insight</span></button><span class="mid">Content brief</span></header>
+      <div class="scroll">
+        <div class="gen" aria-live="polite">
+          <div class="gen-orb"><svg class="ic"><use href="#i-spark"/></svg></div>
+          <h2>Drafting your brief</h2>
+          <ol class="gen-steps">
+            <li>Reading 169 de-identified signals</li>
+            <li>Matching the approved claims library</li>
+            <li>Drafting the brief</li>
+          </ol>
+        </div>
+        <div class="brief-out" hidden>
+          <div class="row"><span class="chip ai"><svg class="ic"><use href="#i-spark"/></svg>AI draft</span><span class="chip">Review before sending</span></div>
+          <h1 id="mbTitle" class="mt12">Brief: a second-dose reminder card for patients</h1>
+          <p class="fine">Tap any dashed field to edit it.</p>
+          <span class="mtag" data-l="3">ROI · time &amp; cost to produce one asset</span>
+          <div class="field"><span class="f-label">Objective</span><div class="f-val" contenteditable="true" spellcheck="false">Help GPs bring patients back for the second shingles dose, and lift two-dose completion in pilot areas.</div></div>
+          <div class="field"><span class="f-label">Audience</span><div class="f-val" contenteditable="true" spellcheck="false">186 GPs in the pilot regions who raised the topic or opened the second-dose guide. All have opted in to personalisation.</div></div>
+          <div class="field"><span class="f-label">Format</span><div class="f-val" contenteditable="true" spellcheck="false">One-page patient card in large print (Spanish), with a space for the second-dose date and a QR to the Ministry of Health’s patient Q&amp;A.</div></div>
+          <div class="field"><span class="f-label">Key messages · from the approved claims library</span>
+            <ol class="claims">
+              <li><span contenteditable="true" spellcheck="false">The schedule is two doses.</span><span class="chip ok tiny"><svg class="ic"><use href="#i-check"/></svg>Approved · C-HZ-012</span></li>
+              <li><span contenteditable="true" spellcheck="false">The second dose is given 2 months after the first.</span><span class="chip ok tiny"><svg class="ic"><use href="#i-check"/></svg>Approved · C-HZ-015</span></li>
+              <li><span contenteditable="true" spellcheck="false" id="claim3">Most patients just need a reminder.</span><span class="chip warn tiny"><svg class="ic"><use href="#i-warn"/></svg>New wording · needs MLR review</span></li>
+            </ol>
+          </div>
+          <div class="field"><span class="f-label">Channels</span><div class="f-val" contenteditable="true" spellcheck="false">Rep hand-over at 28 upcoming visits · GSKGO briefing for 158 GPs · no email</div></div>
+          <div class="field"><span class="f-label">How we’ll know it worked</span><div class="f-val" contenteditable="true" spellcheck="false">Two-dose completion at 65 in pilot areas vs matched control (Ministry data) · relevance ≥ 4/5 · fewer repeat questions within 60 days</div></div>
+          <div class="card flat timer"><svg class="ic"><use href="#i-clock"/></svg><p><strong>Drafted in 1 min 52 s.</strong> A brief like this usually takes days of back-and-forth (illustrative).</p></div>
+        </div>
+      </div>
+      <div class="footer-actions" data-if="briefReady">
+        <button class="btn block" data-go="m-plan">Next: plan the touches</button>
+        <button class="btn ghost block" data-act="regen"><svg class="ic"><use href="#i-refresh"/></svg>Regenerate</button>
+      </div>
+    </section>
+
+    <!-- ===================== MARKETING: PLAN ===================== -->
+    <section class="screen" data-screen="m-plan" tabindex="-1" aria-labelledby="mpTitle">
+      <header class="topbar"><button class="back-btn" data-back="m-brief"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Brief</span></button><span class="mid">Plan</span></header>
+      <div class="scroll">
+        <h1 id="mpTitle">Plan the touches</h1>
+        <p class="lead">186 GPs, coordinated with the field team so nobody hears it twice.</p>
+        <span class="mtag" data-l="3">ROI · cost per touch by channel</span>
+        <ol class="timeline">
+          <li><span class="tl-dot field"><svg class="ic"><use href="#i-person"/></svg></span><div class="tl-body"><span class="tl-when">Week 42 · In person</span><strong>28 GPs with a rep visit in the next 7 days</strong><p>Reps get a prep note: “Asked about second doses. Hand over the reminder card.”</p><span class="chip tiny">Email held</span></div></li>
+          <li><span class="tl-dot app"><svg class="ic"><use href="#i-spark"/></svg></span><div class="tl-body"><span class="tl-when">Week 43 · GSKGO briefing</span><strong>158 GPs</strong><p>Delivered as “You asked, we answered”.</p></div></li>
+          <li><span class="tl-dot std"><svg class="ic"><use href="#i-mail"/></svg></span><div class="tl-body"><span class="tl-when">Week 44 · Standard newsletter</span><strong>All other GPs</strong><p>One line in the monthly newsletter. Not targeted, no personal data used.</p></div></li>
+        </ol>
+        <h2 class="section-title">Rules applied</h2>
+        <div class="list-card rules">
+          <div><svg class="ic"><use href="#i-check"/></svg>No touch if the rep covered the topic in the last 14 days</div>
+          <div><svg class="ic"><use href="#i-check"/></svg>No more than one GSK message per GP per week</div>
+          <div><svg class="ic"><use href="#i-check"/></svg>Targeting uses consented data only</div>
+          <div><svg class="ic"><use href="#i-check"/></svg>Nothing goes out before MLR approval</div>
+        </div>
+        <div class="card compare">
+          <div class="old"><span class="big">186</span><span class="sub">emails, the old way</span></div>
+          <svg class="ic"><use href="#i-arrow"/></svg>
+          <div class="new"><span class="big">0</span><span class="sub">duplicate messages · 28 rep conversations reused</span></div>
+        </div>
+        <span class="mtag" data-l="4">Strategic · continuity across channels</span>
+      </div>
+      <div class="footer-actions">
+        <button class="btn block" data-act="approve-plan" data-if="!submitted">Approve &amp; send to MLR review</button>
+        <p class="fine center" data-if="!submitted">Medical, Legal &amp; Regulatory review every asset before any GP sees it.</p>
+        <p class="sys-inline center-row" data-if="submitted"><svg class="ic"><use href="#i-check"/></svg>Sent to MLR review · BRF-2026-118</p>
+        <button class="btn secondary block" data-if="submitted" data-go="m-home" data-dir="back">Back to insights</button>
+      </div>
+    </section>
+
+    <!-- ===================== MARKETING: DONE / LOOP ===================== -->
+    <section class="screen" data-screen="m-done" tabindex="-1" aria-labelledby="mdTitle">
+      <header class="topbar"><span class="mid">Brief sent</span><span class="spacer"></span><button class="link" data-go="m-home" data-dir="back">Done</button></header>
+      <div class="scroll">
+        <div class="done-badge"><svg class="ic"><use href="#i-check"/></svg></div>
+        <h1 id="mdTitle" class="center">Sent to MLR review</h1>
+        <p class="lead center">Ref BRF-2026-118. You’ll be notified when it’s approved.</p>
+        <h2 class="section-title">The loop, closed</h2>
+        <ol class="loop">
+          <li><span class="loop-ic field">1</span><div><strong>Dra. Martín asks Laura during a visit</strong><span class="sub">“Anything simple to bring patients back for dose two?”</span></div></li>
+          <li><span class="loop-ic ai">2</span><div><strong>AI turns 169 signals into one insight</strong><span class="sub">Rep visit summaries + GSKGO questions, de-identified</span></div></li>
+          <li><span class="loop-ic mkt">3</span><div><strong>Javier approves a brief in minutes</strong><span class="sub">Approved claims, coordinated with the field team</span></div></li>
+          <li><span class="loop-ic mlr">4</span><div><strong>MLR approves the card</strong><span class="sub">People stay accountable for every asset</span></div></li>
+          <li><span class="loop-ic hcp">5</span><div><strong>Dra. Martín gets it, once</strong><span class="sub">From Laura, or as “You asked, we answered”</span></div></li>
+        </ol>
+        <span class="mtag" data-l="4">Strategic · insight-to-action loop closed</span>
+      </div>
+      <div class="footer-actions">
+        <button class="btn block" data-act="see-hcp">Switch to Dra. Martín’s view</button>
+        <div class="btn-row two"><button class="btn secondary" data-go="m-pipeline" data-dir="tab">Pipeline</button><button class="btn secondary" data-go="start" data-dir="back">Demo start</button></div>
+      </div>
+    </section>
+
+    <!-- ===================== MARKETING: PIPELINE ===================== -->
+    <section class="screen" data-screen="m-pipeline" data-tabs="mkt" tabindex="-1" aria-labelledby="mpiTitle">
+      <header class="topbar app"><h1 class="topbar-title" id="mpiTitle">Pipeline</h1><button class="avatar av-mkt sm" data-sheet="m-menu" aria-label="Account menu">JO</button></header>
+      <div class="scroll">
+        <p class="lead">Every asset and decision, with who’s accountable.</p>
+        <div class="list-card mt16">
+          <div class="pipe-row" data-if="submitted"><div><strong><span class="new-dot"></span>Patient card: second-dose reminder</strong><span class="sub">Submitted today · BRF-2026-118</span></div><span class="status amber">In MLR review</span></div>
+          <div class="pipe-row" data-if="fatigueA"><div><strong>‘Shingles awareness’ email series</strong><span class="sub">Rep already covered it for 214 GPs</span></div><span class="status gray">Paused · 214</span></div>
+          <div class="pipe-row" data-if="channelA"><div><strong>Q4 webinars</strong><span class="sub">Registered GPs notified</span></div><span class="status teal">Moved to 20:30</span></div>
+          <div class="pipe-row"><div><strong>Shingles by region: HCP summary</strong><span class="sub">ES-HZ-0926-011 · relevance 4.6 / 5</span></div><span class="status green">Live</span></div>
+          <div class="pipe-row"><div><strong>Second dose: practice guide</strong><span class="sub">ES-HZ-0926-014 · relevance 4.4 / 5</span></div><span class="status green">Live</span></div>
+          <div class="pipe-row"><div><strong>Autumn campaign reminder</strong><span class="sub">Standard newsletter</span></div><span class="status gray">Scheduled · 19 Oct</span></div>
+        </div>
+        <p class="fine mt12" data-if="!submitted">Tip: approve the brief from <button class="link inline" data-go="m-insight">the second-dose insight</button> to see it appear here.</p>
+        <span class="mtag" data-l="3">ROI · content production cost per asset</span>
+      </div>
+    </section>
+
+    <div class="splash" id="splash" hidden aria-hidden="true"><div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span></div></div>
+
+    <!-- tab bars -->
+    <nav class="tabbar" data-tabbar="hcp" aria-label="Doctor app" hidden>
+      <button class="tab" data-go="briefing" data-dir="tab"><svg class="ic"><use href="#i-brief"/></svg>This week</button>
+      <button class="tab" data-go="rules" data-dir="tab"><svg class="ic"><use href="#i-rules"/></svg>Check rules</button>
+      <button class="tab" data-go="ask" data-dir="tab"><svg class="ic"><use href="#i-spark"/></svg>Ask</button>
+      <button class="tab" data-go="you" data-dir="tab"><svg class="ic"><use href="#i-user"/></svg>Me</button>
+    </nav>
+    <nav class="tabbar" data-tabbar="mkt" aria-label="Marketing app" hidden>
+      <button class="tab" data-go="m-home" data-dir="tab"><svg class="ic"><use href="#i-chart"/></svg>Insights</button>
+      <button class="tab" data-go="m-pipeline" data-dir="tab"><svg class="ic"><use href="#i-layers"/></svg>Pipeline</button>
+    </nav>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <div class="sheet-layer" id="sheetLayer" hidden>
+      <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+        <div class="grabber" aria-hidden="true"></div>
+        <button class="icon-btn sheet-close" data-close aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button>
+        <div id="sheetBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- presenter controls: large screens only -->
+  <aside class="presenter" aria-label="Demo controls">
+    <div class="pp-title"><img class="logo" src="gsk-logo.png" alt="GSK"><span>GSKGO<small>Demo controls · presenter only</small></span></div>
+    <div class="pp-group">
+      <h3>Doctor journey</h3>
+      <div class="pp-jumps">
+        <button data-go="lock" data-pp="lock"><span class="pp-num">1</span>Notification</button>
+        <button data-go="verify" data-pp="verify"><span class="pp-num">2</span>Verified HCP</button>
+        <button data-go="consent" data-pp="consent"><span class="pp-num">3</span>Consent, her rules</button>
+        <button data-go="briefing" data-pp="briefing"><span class="pp-num">4</span>Briefing ★</button>
+        <button data-go="rules" data-pp="rules"><span class="pp-num">5</span>Check rules + QR</button>
+        <button data-go="item:second" data-pp="item"><span class="pp-num">6</span>Second dose + sources</button>
+        <button data-go="ask" data-pp="ask"><span class="pp-num">7</span>Ask (guardrails)</button>
+        <button data-go="you" data-pp="you"><span class="pp-num">8</span>Me: control + AI off</button>
+        <button data-go="data" data-pp="data"><span class="pp-num">9</span>What we know</button>
+      </div>
+    </div>
+    <div class="pp-group">
+      <h3>Marketing journey</h3>
+      <div class="pp-jumps">
+        <button data-go="m-home" data-pp="m-home"><span class="pp-num">1</span>Insights home</button>
+        <button data-go="m-insight" data-pp="m-insight"><span class="pp-num">2</span>Emerging need</button>
+        <button data-go="m-brief" data-pp="m-brief"><span class="pp-num">3</span>AI brief</button>
+        <button data-go="m-plan" data-pp="m-plan"><span class="pp-num">4</span>Coordinated plan</button>
+        <button data-go="m-done" data-pp="m-done"><span class="pp-num">5</span>Loop closed</button>
+        <button data-go="m-pipeline" data-pp="m-pipeline"><span class="pp-num">6</span>Pipeline</button>
+      </div>
+    </div>
+    <div class="list-card">
+      <label class="switch-row"><span><strong>Measurement lens</strong><span class="sub">KPI level tags (L1–L4)</span></span><input type="checkbox" role="switch" data-lens><span class="switch" aria-hidden="true"></span></label>
+    </div>
+    <div class="btn-row two">
+      <button class="btn secondary sm" data-go="start" data-dir="back">Start screen</button>
+      <button class="btn secondary sm" data-act="reset">Reset demo</button>
+    </div>
+    <div class="pp-qr" id="ppQr" hidden><div id="qr" aria-label="QR code linking to this prototype"></div><span>Scan to open this prototype on a phone.</span></div>
+    <p class="pp-note">This panel only shows on large screens. On a phone, the app fills the screen.</p>
+  </aside>
+</div>
+
+<!-- ===================== SHEET TEMPLATES ===================== -->
+<template id="sheet-privacy">
+  <h2>Privacy notice, the short version</h2>
+  <div class="notice-grid">
+    <div><strong>Who</strong><p>GSK is the data controller. Questions: the privacy contact listed in the full notice (fictitious for this prototype).</p></div>
+    <div><strong>What and why</strong><p>Your colegiado number and region (to confirm you’re a doctor), the topics you choose, items you open or rate, questions you ask, and visit summaries you agree to share. Used only to personalise your briefing and avoid repeat messages. Legal basis: your consent.</p></div>
+    <div><strong>AI</strong><p>AI chooses and orders content that GSK Medical, Legal &amp; Regulatory have already approved, and finds approved answers to your questions. It doesn’t write medical content. AI use is always labelled. It never sees patient data.</p></div>
+    <div><strong>Side effects</strong><p>Anything that may be a side effect goes to GSK Pharmacovigilance, as the law requires, and is never shared with Marketing or your rep.</p></div>
+    <div><strong>How long</strong><p>24 months after your last activity, then deleted.</p></div>
+    <div><strong>Your rights</strong><p>See, download, correct or delete your data; withdraw consent as easily as you gave it; complain to the Spanish data protection authority (AEPD).</p></div>
+  </div>
+  <button class="btn secondary block" data-close>Close</button>
+</template>
+
+<template id="sheet-held">
+  <h2>Held back for you this month</h2>
+  <p class="muted">We didn’t send these. Nothing is lost: you can still see them.</p>
+  <div class="list-card">
+    <div class="pref-row" data-if="rep"><div><strong>‘Shingles awareness’ email #3</strong><span class="sub">Laura covered this at your visit on 29 Sep</span></div></div>
+    <div class="pref-row" data-if="rep"><div><strong>Second-dose reminder email</strong><span class="sub">Laura covered this at your visit on 29 Sep</span></div></div>
+    <div class="pref-row" data-if="personal"><div><strong>Oncology congress invitation</strong><span class="sub">Not one of your topics</span></div></div>
+    <div class="pref-row" data-if="personal"><div><strong>HIV awareness newsletter</strong><span class="sub">Not one of your topics</span></div></div>
+  </div>
+  <button class="btn secondary block mt16" data-act="show-held">Show them to me anyway</button>
+</template>
+
+<template id="sheet-why">
+  <h2>Why am I seeing this?</h2>
+  <ul class="reasons" data-fill="reasons"></ul>
+  <p class="fine"><svg class="ic" style="width:14px;height:14px;color:var(--ai)"><use href="#i-spark"/></svg> AI picked and ranked this from GSK-approved content, using only the data you allowed. It never sees patient data.</p>
+  <button class="btn secondary block mt16" data-go="you" data-dir="tab">Adjust my preferences</button>
+</template>
+
+<template id="sheet-about-approved">
+  <span class="chip ok"><svg class="ic"><use href="#i-check"/></svg>Approved content</span>
+  <h2>Who wrote this?</h2>
+  <ul class="reasons dots">
+    <li>GSK wrote this summary and Medical, Legal &amp; Regulatory approved it (code <strong data-fill="code"></strong>).</li>
+    <li>AI didn’t write it. AI only chose which approved items go in your briefing, and in what order.</li>
+    <li>Every point links to its source. If anything differs, the source is right.</li>
+  </ul>
+  <button class="btn secondary block" data-close>Got it</button>
+</template>
+
+<template id="sheet-ae">
+  <span class="kicker warn"><svg class="ic"><use href="#i-alert"/></svg>Patient safety</span>
+  <h2>Report a suspected side effect</h2>
+  <ul class="reasons dots">
+    <li>Your report goes straight to <strong>GSK Pharmacovigilance</strong>. It is never shared with your rep or with Marketing.</li>
+    <li>Leave out the patient’s name. Initials, age and sex are enough.</li>
+    <li>A safety specialist may contact you if more detail is needed.</li>
+  </ul>
+  <div class="stack mt16">
+    <button class="btn block" data-act="ae-start">Start a report to GSK</button>
+    <button class="btn secondary block" data-act="ae-aemps">Report to the Spanish system (notificaRAM.es)</button>
+  </div>
+  <span class="mtag" data-l="4">Strategic · safety reports reach PV in time</span>
+</template>
+
+<template id="sheet-qr">
+  <h2>For your patient</h2>
+  <p class="muted">Let your patient scan this for the Ministry of Health’s Q&amp;A on shingles vaccination (in Spanish).</p>
+  <div class="qr-box" id="patientQr" aria-label="QR code to the Ministry of Health patient Q&amp;A"></div>
+  <p class="fine center">Official public source · not promotional material</p>
+  <h3 class="mt16">Talking points for you</h3>
+  <ul class="reasons dots">
+    <li>It’s two doses; the second completes the schedule.</li>
+    <li>The second dose is due about 2 months after the first.</li>
+    <li>It’s free for the groups your region includes.</li>
+  </ul>
+  <p class="fine">Approved talking points · ES-HZ-0926-014</p>
+  <span class="mtag" data-l="3">ROI · content reuse instead of new assets</span>
+</template>
+
+<template id="sheet-source">
+  <span class="chip ok"><svg class="ic"><use href="#i-check"/></svg>Approved source</span>
+  <h2 data-fill="title"></h2>
+  <p class="muted" data-fill="kind"></p>
+  <p data-fill="approved"></p>
+  <p class="fine" data-fill="id"></p>
+  <button class="btn block mt16" data-act="open-pdf"><svg class="ic"><use href="#i-doc"/></svg>Open the document (PDF)</button>
+</template>
+
+<template id="sheet-mi">
+  <h2>Ask a GSK medical advisor</h2>
+  <p class="muted">A medical advisor (a person, not AI) replies within 2 working days.</p>
+  <label class="f-label" for="miText">Your question</label>
+  <textarea id="miText" class="input" rows="4" placeholder="Type your question. No patient details, please."></textarea>
+  <p class="fine mt8" id="miNote" hidden>Rewritten without patient details. Edit it if needed.</p>
+  <fieldset class="radios mt12"><legend class="f-label">How should we reply?</legend>
+    <label><input type="radio" name="miReply" value="email" checked> Email</label>
+    <label><input type="radio" name="miReply" value="phone"> Phone call</label>
+    </fieldset>
+  <label class="check-row"><input type="checkbox" id="miConsent"><span>Share my question and contact details with GSK Medical Information so they can answer this request.</span></label>
+  <button class="btn block" id="miSend" data-act="send-mi" disabled>Send request</button>
+  <span class="mtag" data-l="2">Emotional · effort score (CES)</span>
+</template>
+
+<template id="sheet-withdraw">
+  <h2>Turn off personalisation?</h2>
+  <p>You’ll get the standard briefing: the same one every GP receives. We stop using your activity from today.</p>
+  <p class="muted">What we already hold stays visible in “What GSKGO knows” until you delete it.</p>
+  <div class="btn-row two mt16"><button class="btn secondary" data-close>Keep it on</button><button class="btn secondary" data-act="withdraw-personal">Turn it off</button></div>
+</template>
+
+<template id="sheet-delete">
+  <h2>Delete everything GSKGO holds about you?</h2>
+  <p>Your preferences, ratings, questions and shared visit summaries will be erased within 30 days, and your briefings will stop. This can’t be undone.</p>
+  <div class="btn-row two mt16"><button class="btn secondary" data-close>Cancel</button><button class="btn danger" data-act="confirm-delete">Delete</button></div>
+</template>
+
+<template id="sheet-m-method">
+  <h2>How was this found?</h2>
+  <ul class="reasons dots">
+    <li>AI grouped 169 signals by topic: rep visit summaries (each reviewed and approved by the rep), questions asked in GSKGO, and webinar Q&amp;A.</li>
+    <li>Names, centres and anything about patients are removed before analysis.</li>
+    <li>A topic only appears once at least 20 different GPs raise it, so no one can be singled out.</li>
+    <li>Only GPs who agreed to share are included.</li>
+  </ul>
+  <p class="fine">Confidence is high because three independent sources agree and the trend has grown for four weeks.</p>
+</template>
+
+<template id="sheet-m-fatigue">
+  <span class="kicker warn"><svg class="ic"><use href="#i-warn"/></svg>Fatigue risk</span>
+  <h2>Pause ‘Shingles awareness’ emails for GPs who already heard it?</h2>
+  <ul class="reasons dots">
+    <li>Relevance has dropped to 2.1 / 5 over the last 3 sends.</li>
+    <li>214 recipients discussed the same topic with their rep in the last 14 days.</li>
+  </ul>
+  <div class="card reco ai-rule"><span class="kicker ai"><svg class="ic"><use href="#i-spark"/></svg>Recommendation</span><p>Pause the series for those 214 GPs. Keep it for GPs who haven’t seen their rep.</p></div>
+  <div class="btn-row two mt16"><button class="btn secondary" data-act="decide" data-k="fatigue" data-v="D">Not now</button><button class="btn" data-act="decide" data-k="fatigue" data-v="A">Approve</button></div>
+</template>
+
+<template id="sheet-m-channel">
+  <span class="kicker"><svg class="ic"><use href="#i-calendar"/></svg>Channel fit</span>
+  <h2>Move the remaining Q4 webinars to 20:30?</h2>
+  <ul class="reasons dots">
+    <li>Across the last 6 webinars, 36% of registered GPs attended at 20:30 vs 12% at 13:30.</li>
+    <li>58% of GPs in GSKGO say they prefer evening events.</li>
+  </ul>
+  <div class="card reco ai-rule"><span class="kicker ai"><svg class="ic"><use href="#i-spark"/></svg>Recommendation</span><p>Move the 2 remaining Q4 webinars to 20:30 and let registered GPs know.</p></div>
+  <div class="btn-row two mt16"><button class="btn secondary" data-act="decide" data-k="channel" data-v="D">Not now</button><button class="btn" data-act="decide" data-k="channel" data-v="A">Approve</button></div>
+</template>
+
+<template id="sheet-m-menu">
+  <h2 class="vh">Account</h2>
+  <div class="profile mt8"><span class="avatar av-mkt">JO</span><div><strong>Javier Ortega</strong><div class="muted">Brand Manager, Adult vaccines · Spain</div></div></div>
+  <div class="card flat mt16 field-note"><svg class="ic" style="color:var(--brand)"><use href="#i-shield"/></svg><p class="fine" style="color:var(--ink-2)">Marketing sees aggregated, de-identified insights only, never an individual GP’s activity.</p></div>
+  <div class="stack mt16">
+    <button class="btn secondary block" data-act="see-hcp">Switch to Dra. Martín’s view</button>
+    <button class="btn secondary block" data-go="start" data-dir="back">Back to demo start</button>
+  </div>
+</template>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+// ?fast skips simulated AI delays (for quick QA runs); normal links keep the full pacing
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches || /[?&]fast\b/.test(location.search);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const wait = ms => sleep(reduceMotion ? 0 : ms);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const icon = (name, cls = 'ic') => `<svg class="${cls}"><use href="#i-${name}"/></svg>`;
+
+/* ------------------------------------------------------------------ state */
+const KEY = 'gskgo-proto-v1';
+const DEFAULT = () => ({
+  v: 1, lens: false,
+  hcp: { onboarded: false, verified: false, consent: { personal: false, rep: false, ai: false }, ratings: {}, seat: false, paused: false,
+         miRef: null, askCtx: null, lastQ: null, lastItem: 'second', read: {}, repRemoved: false, inferRemoved: false, saved: {},
+         assembled: false, loop: false, rule: { region: 'mad', age: '65-80', risk: 'none' } },
+  mkt: { fatigue: null, channel: null, submitted: false, briefReady: false, variant: 0 }
+});
+function load() {
+  try {
+    const raw = sessionStorage.getItem(KEY); if (!raw) return null;
+    const o = JSON.parse(raw); if (!o || o.v !== 1) return null;
+    const d = DEFAULT();
+    return { ...d, ...o, hcp: { ...d.hcp, ...o.hcp, consent: { ...d.hcp.consent, ...((o.hcp || {}).consent || {}) } }, mkt: { ...d.mkt, ...o.mkt } };
+  } catch (e) { return null; }
+}
+let S = load() || DEFAULT();
+function save() { try { sessionStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+function flags() {
+  const c = S.hcp.consent, m = S.mkt;
+  return {
+    personal: c.personal, rep: c.rep, ai: c.ai, held: c.personal || c.rep, onboarded: S.hcp.onboarded, loop: !!S.hcp.loop,
+    seat: S.hcp.seat, paused: S.hcp.paused, mi: !!S.hcp.miRef, repRemoved: S.hcp.repRemoved, inferRemoved: S.hcp.inferRemoved,
+    fatigueA: m.fatigue === 'A', fatigueD: m.fatigue === 'D', fatigueDone: !!m.fatigue,
+    channelA: m.channel === 'A', channelD: m.channel === 'D', channelDone: !!m.channel,
+    submitted: m.submitted, briefReady: m.briefReady
+  };
+}
+function values() {
+  const c = S.hcp.consent, a = c.rep ? 2 : 0, b = c.personal ? 2 : 0;
+  return {
+    heldCount: a + b,
+    heldWhy: [a ? `${a} Laura covered` : '', b ? `${b} off-topic` : ''].filter(Boolean).join(' · '),
+    avoided: (312 + (S.mkt.fatigue === 'A' ? 214 : 0)).toLocaleString('en-US'),
+    pending: 3 - [S.mkt.fatigue, S.mkt.channel, S.mkt.submitted || null].filter(Boolean).length
+  };
+}
+function applyIfs() {
+  const f = flags();
+  $$('[data-if]').forEach(el => {
+    const ok = el.dataset.if.split('&').every(t => t[0] === '!' ? !f[t.slice(1)] : !!f[t]);
+    el.hidden = !ok;
+  });
+  const v = values();
+  $$('[data-text]').forEach(el => { const k = el.dataset.text; if (k in v) el.textContent = v[k]; });
+  const count = $('[data-text="pending"]'); if (count) count.hidden = v.pending <= 0;
+  markRead();
+}
+function markRead() {
+  const read = S.hcp.read || {}; let n = 0, total = 0;
+  $$('#briefContent .feed > article.card').forEach(card => {
+    if (card.hidden) return; total++;
+    const a = card.querySelector('a.card-link[data-go^="item:"]');
+    const done = a ? !!read[a.dataset.go.split(':')[1]] : (card.querySelector('[data-act="seat"]') ? !!S.hcp.seat : false);
+    card.classList.toggle('is-read', done); if (done) n++;
+  });
+  const el = $('#readProg'); if (!el || !total) return;
+  el.textContent = n === 0 ? `${total} items · 2 min` : n >= total ? `All ${total} done ✓` : `${n} of ${total} done`;
+}
+function syncLens() {
+  document.body.classList.toggle('lens', !!S.lens);
+  $$('input[data-lens]').forEach(i => { i.checked = !!S.lens; });
+}
+function syncConsentInputs() {
+  $$('input[data-consent]').forEach(i => { i.checked = !!S.hcp.consent[i.dataset.consent]; });
+  updateConsentSummary();
+}
+function updateConsentSummary() {
+  const el = $('#consentSummary'); if (!el) return;
+  const n = Object.values(S.hcp.consent).filter(Boolean).length;
+  el.classList.toggle('on', n > 0);
+  el.innerHTML = n === 0 ? 'Nothing is on until you switch it on.' : `${icon('check')} ${n} of 3 on. Change this any time in Me → Privacy.`;
+}
+
+/* ------------------------------------------------------------------ content */
+const DOCS = {
+  'MAD-CAL-2026': { pub: 1, title: 'Comunidad de Madrid · adult vaccination calendar 2026', kind: 'Public source · regional health authority', approved: 'Public document. Checked by GSK Medical on 1 Oct 2026.' },
+  'MS-CAL-2026': { pub: 1, title: 'Ministerio de Sanidad · common vaccination calendar 2026', kind: 'Public source · Consejo Interterritorial del SNS', approved: 'Public document. Checked by GSK Medical on 1 Oct 2026.' },
+  'MS-SIV-2024': { pub: 1, title: 'Ministerio de Sanidad · shingles vaccination coverage 2024 (SIV)', kind: 'Public source · national coverage data', approved: 'Public data, as reported March 2026.' },
+  'ES-HZ-0926-011': { title: 'Shingles vaccination by region: HCP summary', kind: 'HCP material · 2 pages · PDF', approved: 'Approved by GSK Medical, Legal & Regulatory on 28 Sep 2026 · version 2' },
+  'ES-HZ-0926-014': { title: 'Second dose: practice guide for primary care', kind: 'HCP material · 1 page · PDF', approved: 'Approved by GSK Medical, Legal & Regulatory on 30 Sep 2026 · version 1' },
+  'ES-HZ-SMPC': { pub: 1, title: 'Product information (SmPC): dosing and co-administration', kind: 'Authorised product information · EMA', approved: 'Authorised product information, current version.' },
+  'ES-HZ-1026-021': { title: 'Second-dose reminder card for patients', kind: 'Patient material · 1 page · large print', approved: 'Approved by GSK Medical, Legal & Regulatory on 16 Oct 2026 · version 1' }
+};
+const ITEMS = {
+  region: {
+    title: 'Who Madrid covers for shingles in 2026', kicker: () => 'Your region · Comunidad de Madrid', kickerCls: () => '',
+    meta: ['1 min read', 'Updated 1 Oct 2026'], code: 'ES-HZ-0926-011', refs: ['MAD-CAL-2026', 'ES-HZ-0926-011'],
+    intro: 'What Comunidad de Madrid’s adult calendar includes this season:',
+    points: [
+      ['All adults aged 65 to 80 are included in the general programme.', 1],
+      ['Risk groups are included from 18, for example transplant recipients.', 1],
+      ['The schedule is two doses, two months apart.', 2],
+      ['For any age or risk group, Check rules gives the answer in seconds.', 2]
+    ], rules: true, qr: true, ask: 'region'
+  },
+  national: {
+    title: 'Shingles vaccination in Spain: who the national calendar recommends', kicker: () => 'National update', kickerCls: () => '',
+    meta: ['1 min read', 'Standard briefing'], code: 'ES-HZ-0926-011', refs: ['MS-CAL-2026', 'ES-HZ-0926-011'],
+    intro: 'The common national calendar, in short:',
+    points: [
+      ['Vaccination at 65 and at 80 has been in the common calendar since 2023.', 1],
+      ['Risk groups are recommended from 18.', 1],
+      ['Each region decides which other age groups it includes, so your region may cover more.', 2]
+    ], rules: true, regionHint: true
+  },
+  second: {
+    title: 'Second doses: who’s due, and a 30-second reminder', kicker: c => c.rep ? 'You asked for this' : 'Practice tip · second dose', kickerCls: c => c.rep ? 'ask' : '',
+    meta: ['2 min read', 'Approved 30 Sep 2026'], code: 'ES-HZ-0926-014', refs: ['MS-SIV-2024', 'ES-HZ-0926-014'],
+    intro: 'The gap, and what to do this week:',
+    points: [
+      ['In 2024, 33.4% of 65-year-olds had a first dose, but only 26.2% had both.', 1],
+      ['The second dose is due about 2 months after the first.', 2],
+      ['In your own clinical system, look for first doses given 2 or more months ago.', 2],
+      ['At the visit, show the patient leaflet QR and note the date for dose two.', 2]
+    ], qr: true, ask: 'second'
+  },
+  coadmin: {
+    title: 'Shingles and flu vaccines at the same visit', kicker: () => 'Autumn campaign', kickerCls: () => '',
+    meta: ['1 min read', 'Standard briefing'], code: 'ES-HZ-0926-014', refs: ['ES-HZ-SMPC', 'ES-HZ-0926-014'],
+    intro: 'Using the flu campaign visit:',
+    points: [
+      ['The product information allows giving it at the same visit as an inactivated flu vaccine, at different injection sites.', 1],
+      ['The flu visit is a good moment to check shingles eligibility for your region.', 2]
+    ], rules: true
+  },
+  reminder: {
+    title: 'A second-dose reminder card for your patients', kicker: () => 'New · You asked, we answered', kickerCls: () => 'ask',
+    meta: ['1 min read', 'Approved 16 Oct 2026'], code: 'ES-HZ-1026-021', refs: ['ES-HZ-1026-021'],
+    intro: 'What you asked for at your visit, ready to use:',
+    points: [
+      ['A one-page card your patient takes home, with a space for the second-dose date.', 1],
+      ['A QR to the Ministry of Health’s patient Q&A on shingles vaccination.', 1],
+      ['Laura can bring printed copies, or you print them from here.', 1]
+    ], qr: true
+  }
+};
+const WHY = {
+  region: () => [['check', 'You work in Comunidad de Madrid (from your verified profile).'], ['calendar', 'Madrid’s adult calendar was updated for this season.'], ['person', 'You follow shingles and adult vaccination.']],
+  second: c => [
+    ['person', 'You asked Laura about second doses at your visit on Tue 29 Sep.'],
+    c.rep ? ['eye', 'Laura will see you’ve read it, so she won’t repeat it at your next visit.'] : ['eye', 'You’re not connected with Laura in GSKGO, so she won’t see that you’ve read it.']
+  ],
+  webinar: () => [['calendar', 'You prefer online events after 20:00.'], ['check', 'It matches your topics: shingles, RSV, flu & COVID.']]
+};
+/* ---------- Check rules: simplified regional logic (prototype) ---------- */
+const REGIONS = { mad: 'Comunidad de Madrid', b: 'Region B (demo data)', c: 'Region C (demo data)' };
+const AGE_LBL = { u50: 'under 50', '50-64': 'aged 50–64', '65-80': 'aged 65–80', o80: 'over 80' };
+const RISK_LBL = { tx: 'transplant recipients', imm: 'people on immunosuppressive treatment', ep: 'people with 2+ previous episodes' };
+function ruleResult(r) {
+  const reg = r.region, age = r.age, risk = r.risk;
+  const std = '2 doses · second dose 2 months after the first (up to 6 months)';
+  const imm = '2 doses · second dose 1–2 months after the first';
+  const src = reg === 'mad' ? 'Comunidad de Madrid · adult calendar 2026 (simplified)' : 'Demo data for the prototype';
+  if (risk !== 'none') {
+    if (risk === 'imm' && age === 'u50') return { st: 'no', head: 'Not in the general schedule', body: 'In this region, people on immunosuppressive treatment are included from age 50.', sched: '—', src };
+    return { st: 'ok', head: 'Included as a risk group', body: `${RISK_LBL[risk][0].toUpperCase() + RISK_LBL[risk].slice(1)} are included${risk === 'imm' ? ' from 50' : ' from 18'}, whatever their age group.`, sched: risk === 'ep' ? std : imm, src };
+  }
+  if (age === '65-80') {
+    if (reg === 'mad') return { st: 'ok', head: 'Included', body: 'All adults aged 65 to 80 are in the general programme this season.', sched: std, src };
+    if (reg === 'b') return { st: 'part', head: 'Included at 65 and at 80 only', body: 'This region vaccinates the people turning 65 or 80 this year.', sched: std, src };
+    return { st: 'part', head: 'Included at 65 only', body: 'This region vaccinates the people turning 65 this year.', sched: std, src };
+  }
+  if (age === 'o80') return { st: 'no', head: 'Not in this season’s general schedule', body: 'Over 80 is not in the general programme this season. Check the risk groups.', sched: '—', src };
+  return { st: 'no', head: 'Not in the general schedule', body: `People ${AGE_LBL[age]} with no risk condition are not included. Check the risk groups.`, sched: '—', src };
+}
+function renderRules() {
+  const r = S.hcp.rule;
+  $('#selRegion').value = r.region;
+  $$('[data-act="rule"]').forEach(b => b.setAttribute('aria-pressed', r[b.dataset.k] === b.dataset.v ? 'true' : 'false'));
+  const x = ruleResult(r);
+  const ic = x.st === 'ok' ? 'check' : x.st === 'part' ? 'info' : 'close';
+  $('#ruleResult').innerHTML = `
+    <span class="status-pill ${x.st}">${icon(ic)}${x.st === 'ok' ? 'Included' : x.st === 'part' ? 'Partly included' : 'Not included'}</span>
+    <h2>${esc(x.head)}</h2>
+    <p class="sub">${esc(x.body)}</p>
+    <div class="kv"><span>Schedule</span><span>${esc(x.sched)}</span></div>
+    <div class="kv"><span>Region</span><span>${esc(REGIONS[r.region])}</span></div>
+    <p class="fine mt8">Source: ${esc(x.src)}</p>`;
+}
+/* ---------- patient QR (official Ministry of Health Q&A) ---------- */
+const PATIENT_URL = 'https://www.sanidad.gob.es/areas/promocionPrevencion/vacunaciones/programasDeVacunacion/docs/Herpes_Zoster_Preguntasyrespuestas.pdf';
+function drawQR(box) {
+  try {
+    if (typeof window.qrcode !== 'function') throw new Error('no lib');
+    const qr = window.qrcode(0, 'M'); qr.addData(PATIENT_URL); qr.make();
+    box.innerHTML = qr.createSvgTag(4, 0);
+  } catch (e) {
+    box.innerHTML = `<p class="qr-fallback">${icon('qr')}<br>QR needs an internet connection.<br>sanidad.gob.es › Herpes zóster: preguntas y respuestas</p>`;
+  }
+}
+
+/* ------------------------------------------------------------------ navigation: a history-backed stack, like a native app */
+// Every push/sheet is a real browser-history entry, so the phone's own Back (Android button, iOS Safari swipe)
+// behaves exactly like the in-app back buttons.
+const ROUTES = {};
+$$('.screen').forEach(el => { ROUTES[el.dataset.screen] = el; });
+const device = $('#device');
+const isIOS = !/Android/i.test(navigator.userAgent) && (/iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+const framedMQ = window.matchMedia('(min-width:700px) and (min-height:620px)');
+const haptic = () => { try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {} };
+
+const GROUP = { start: 'demo', lock: 'os', verify: 'onboard', consent: 'onboard', briefing: 'hcp', item: 'hcp', rules: 'hcp', ask: 'hcp', you: 'hcp', data: 'hcp' };
+const PARENT = { lock: 'start', verify: 'lock', consent: 'verify', briefing: 'lock', item: 'briefing', rules: 'briefing', ask: 'briefing', you: 'lock', data: 'you',
+  'm-home': 'start', 'm-pipeline': 'start', 'm-insight': 'm-home', 'm-brief': 'm-insight', 'm-plan': 'm-brief', 'm-done': 'm-home' };
+const TITLES = { start: 'Demo', lock: 'Lock screen', verify: 'Verify', consent: 'Consent', briefing: 'This week', item: 'Article', rules: 'Check rules', ask: 'Ask', you: 'Me', data: 'Your data',
+  'm-home': 'Insights', 'm-insight': 'Insight', 'm-brief': 'Brief', 'm-plan': 'Plan', 'm-done': 'Back', 'm-pipeline': 'Pipeline' };
+const idOf = r => String(r || '').split(':')[0];
+const groupOf = r => { const id = idOf(r); return id.startsWith('m-') ? 'mkt' : (GROUP[id] || id); };
+
+const NAVKEY = 'gskgo-nav-v1';
+let stack = [], navIdx = 0, curRoute = null, current = null;
+let pendingPop = null, pendingDir = null, popTimer = null;
+const afterPop = [];
+
+function routeFromHash() {
+  const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
+  return ROUTES[idOf(h)] ? h : 'start';
+}
+function saveNav() { try { sessionStorage.setItem(NAVKEY, JSON.stringify({ stack: stack.slice(0, navIdx + 1), navIdx })); } catch (e) {} }
+// history.back()/go() are async: hold further navigation until the popstate lands
+function settled(fn) { if (pendingPop) afterPop.push(fn); else fn(); }
+function expectPop(kind, dir) {
+  pendingPop = kind; pendingDir = dir;
+  clearTimeout(popTimer);
+  popTimer = setTimeout(() => { if (pendingPop) { pendingPop = null; pendingDir = null; flushPop(); } }, 700);
+}
+function flushPop() { while (afterPop.length && !pendingPop) afterPop.shift()(); }
+
+function push(route, dir = 'fwd') {
+  settled(() => {
+    if (sheetState === 'open' && stack[navIdx] && stack[navIdx].sheet) {
+      // navigating from inside a sheet: the sheet's history entry becomes the new screen
+      hideSheet(true);
+      stack[navIdx] = { route };
+      history.replaceState({ idx: navIdx, route }, '', '#/' + route);
+    } else if (route === curRoute) { hideSheet(true); render('none'); return; }
+    else {
+      hideSheet(true);
+      navIdx++; stack.length = navIdx; stack[navIdx] = { route };
+      history.pushState({ idx: navIdx, route }, '', '#/' + route);
+    }
+    saveNav(); render(dir);
+  });
+}
+function replace(route, dir = 'fade') {
+  settled(() => {
+    hideSheet(true);
+    stack[navIdx] = { route };
+    history.replaceState({ idx: navIdx, route }, '', '#/' + route);
+    saveNav(); render(dir);
+  });
+}
+function backTarget(fallback) {
+  const prev = stack[navIdx - 1];
+  const parent = fallback || PARENT[idOf(curRoute)] || 'start';
+  if (navIdx > 0 && prev && !prev.sheet && (groupOf(prev.route) === groupOf(curRoute) || idOf(prev.route) === idOf(parent))) return { route: prev.route, history: true };
+  return { route: parent, history: false };
+}
+function back(fallback, dir = 'back') {
+  if (pendingPop) return;
+  if (sheetState === 'open') { closeSheet(); return; }
+  const t = backTarget(fallback);
+  if (t.history && history.length > 1) { expectPop('nav', dir); history.back(); }
+  else replace(t.route, dir);
+}
+function backTo(route, dir = 'back') {
+  settled(() => {
+    for (let j = navIdx - 1; j >= 0; j--) {
+      if (stack[j] && !stack[j].sheet && stack[j].route === route) { expectPop('nav', dir); history.go(j - navIdx); return; }
+    }
+    replace(route, dir);
+  });
+}
+function tabGo(target) {
+  settled(() => {
+    const cur = idOf(curRoute), root = (current && current.dataset.tabroot) || cur;
+    if (cur === target) {
+      if (sheetState === 'open') { closeSheet(); return; }
+      const sc = current.querySelector('.scroll');      // re-tapping the current tab scrolls to top, like iOS
+      if (sc) sc.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      return;
+    }
+    const g = groupOf(curRoute);
+    for (let j = navIdx - 1; j >= 0; j--) {
+      const e = stack[j]; if (!e) break;
+      if (e.sheet) continue;
+      if (groupOf(e.route) !== g) break;
+      if (e.route === target) { expectPop('nav', target === root ? 'back' : 'tab'); history.go(j - navIdx); return; }
+    }
+    push(target, 'tab');
+  });
+}
+function nav(target, dir) {
+  if (dir === 'tab') tabGo(target);
+  else if (dir === 'back') backTo(target);
+  else if (dir === 'replace') replace(target, 'fade');
+  else push(target, dir === 'fade' ? 'fade' : 'fwd');
+}
+
+window.addEventListener('popstate', e => {
+  const st = e.state;
+  clearTimeout(popTimer);
+  pendingPop = null;
+  let dir = pendingDir; pendingDir = null;
+  if (!st || typeof st.idx !== 'number') {
+    // a plain #fragment change we didn't create (typed URL, stray link): treat as a push
+    const route = routeFromHash();
+    navIdx++; stack.length = navIdx; stack[navIdx] = { route };
+    history.replaceState({ idx: navIdx, route }, '', '#/' + route);
+    saveNav(); hideSheet(true);
+    if (route !== curRoute) render('fwd');
+    flushPop(); return;
+  }
+  const prevIdx = navIdx;
+  navIdx = st.idx;
+  if (st.sheet) history.replaceState({ idx: navIdx, route: st.route }, '', location.href); // forward onto an old sheet entry
+  stack[navIdx] = { route: st.route || routeFromHash() };
+  saveNav();
+  const route = routeFromHash();
+  if (route === curRoute) {
+    if (sheetState === 'open') hideSheet(false);          // system Back while a sheet is up just closes the sheet
+  } else {
+    hideSheet(true);
+    // iOS Safari already animated its own swipe-back, so don't slide a second time
+    if (!dir) dir = navIdx < prevIdx ? ((isIOS && !isStandalone) ? 'none' : 'back') : 'fwd';
+    render(dir);
+  }
+  flushPop();
+});
+window.addEventListener('hashchange', () => {
+  const route = routeFromHash();   // fallback for browsers that skip popstate on fragment changes
+  if (route !== curRoute && !pendingPop) { stack[navIdx] = { route }; history.replaceState({ idx: navIdx, route }, '', '#/' + route); saveNav(); render('fwd'); }
+});
+
+/* ------------------------------------------------------------------ rendering + transitions */
+const DUR = 340;
+const ANIM = ['enter-fwd', 'enter-back', 'enter-fade', 'leave-fwd', 'leave-back', 'leave-fade', 'swipe-top', 'swipe-under'];
+const themeMeta = $('meta[name="theme-color"]');
+function clearAnim(s) { clearTimeout(s._t); s.classList.remove(...ANIM); s.style.transform = ''; s.style.transition = ''; }
+function render(dir = 'fwd') {
+  const route = routeFromHash();
+  const id = idOf(route), param = route.split(':')[1] || null;
+  const el = ROUTES[id];
+  const prev = current;
+  const kind = dir === 'back' ? 'back' : dir === 'fwd' ? 'fwd' : 'fade';
+  const animate = dir !== 'none' && !reduceMotion && prev && prev !== el;
+  if (prev && prev !== el) {
+    clearAnim(prev);
+    if (animate) {
+      prev.classList.add('leave-' + kind); prev.inert = true;
+      prev._t = setTimeout(() => { if (prev !== current) prev.classList.remove('active'); clearAnim(prev); prev.inert = false; }, DUR);
+    } else prev.classList.remove('active');
+  }
+  clearAnim(el); el.inert = false; el.classList.add('active');
+  if (animate) { void el.offsetWidth; el.classList.add('enter-' + kind); el._t = setTimeout(() => clearAnim(el), DUR); }
+  const sc = el.querySelector('.scroll');
+  if (sc && (dir === 'fwd' || dir === 'fade') && prev !== el && id !== 'ask') sc.scrollTop = 0;
+  curRoute = route; current = el;
+
+  const tabs = el.dataset.tabs || '';
+  $$('.tabbar').forEach(tb => {
+    const on = tb.dataset.tabbar === tabs;
+    tb.hidden = !on;
+    if (on) $$('.tab', tb).forEach(t => t.setAttribute('aria-current', t.dataset.go === (el.dataset.tabroot || id) ? 'page' : 'false'));
+  });
+  device.classList.toggle('status-light', el.dataset.status === 'light');
+  if (themeMeta) themeMeta.content = el.dataset.status === 'light' ? '#0F1B2B' : '#F4F1EC';
+  $('#sbTime').textContent = id.startsWith('m-') ? '9:30' : '8:12';
+
+  applyIfs();
+  if (ENTER[id]) ENTER[id](param);
+  updateBars(el);
+  $$('.pp-jumps button').forEach(b => b.setAttribute('aria-current', b.dataset.pp === id ? 'true' : 'false'));
+  if (prev) el.focus({ preventScroll: true });
+}
+function updateBars(el) {
+  // back labels name the screen you'll actually return to, like iOS
+  $$('.topbar [data-back]', el).forEach(b => {
+    const lbl = b.querySelector('.bl'); if (lbl) lbl.textContent = TITLES[idOf(backTarget(b.dataset.back).route)] || 'Back';
+  });
+  const sc = el.querySelector('.scroll'), tb = el.querySelector(':scope > .topbar');
+  if (tb) { const y = sc ? sc.scrollTop : 0; tb.classList.toggle('scrolled', y > 8); tb.classList.toggle('titled', y > 72); }
+}
+// top bar gets a hairline + compact title once the large title scrolls away
+document.addEventListener('scroll', e => {
+  const sc = e.target;
+  if (!(sc instanceof Element) || !sc.classList.contains('scroll')) return;
+  const tb = sc.parentElement && sc.parentElement.querySelector(':scope > .topbar');
+  if (tb) { tb.classList.toggle('scrolled', sc.scrollTop > 8); tb.classList.toggle('titled', sc.scrollTop > 72); }
+}, true);
+
+/* ------------------------------------------------------------------ toast & sheets */
+let toastTimer = null;
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+const layer = $('#sheetLayer'), sheetEl = $('#sheet'), sheetBody = $('#sheetBody');
+let sheetState = 'closed', sheetTimer = null, lastFocus = null;
+const SHEET_INIT = {
+  why(b, opener) {
+    const fn = WHY[(opener && opener.dataset.why) || 'second'] || WHY.second;
+    $('[data-fill="reasons"]', b).innerHTML = fn(S.hcp.consent).map(([ic, t]) => `<li>${icon(ic)}<span>${esc(t)}</span></li>`).join('');
+  },
+  source(b, opener) {
+    const id = opener && opener.dataset.doc; const d = DOCS[id] || DOCS['ES-HZ-0926-014'];
+    $('[data-fill="title"]', b).textContent = d.title;
+    $('[data-fill="kind"]', b).textContent = d.kind;
+    $('[data-fill="approved"]', b).textContent = d.approved;
+    $('[data-fill="id"]', b).textContent = d.pub ? `Real public source · reference ${id} is for this prototype` : `Document ${id} · fictitious, for this prototype`;
+    const chip = $('.chip.ok', b); if (chip && d.pub) chip.innerHTML = `${icon('check')}Public source`;
+  },
+  'about-approved'(b, opener) { $('[data-fill="code"]', b).textContent = (opener && opener.dataset.code) || 'ES-HZ-0926-014'; },
+  qr(b) { drawQR($('#patientQr', b)); },
+  mi(b) {
+    const lq = S.hcp.lastQ, ta = $('#miText', b), note = $('#miNote', b);
+    if (lq && ['patient', 'fallback', 'compare'].includes(lq.key)) { const r = redact(lq.text); ta.value = r.text; note.hidden = !r.removed.length; }
+    else ta.value = '';
+  }
+};
+function openSheet(name, opener) {
+  const tpl = document.getElementById('sheet-' + name); if (!tpl) return;
+  if (pendingPop) { afterPop.push(() => openSheet(name, opener)); return; }
+  const reuse = sheetState === 'open';
+  if (sheetState === 'closing') finishSheet();
+  sheetBody.innerHTML = '';
+  sheetBody.appendChild(tpl.content.cloneNode(true));
+  const h = sheetBody.querySelector('h2'); if (h) h.id = 'sheetTitle';
+  if (SHEET_INIT[name]) SHEET_INIT[name](sheetBody, opener);
+  applyIfs();
+  if (!reuse) {
+    navIdx++; stack.length = navIdx; stack[navIdx] = { route: curRoute, sheet: true };
+    history.pushState({ idx: navIdx, route: curRoute, sheet: name }, '', location.href);
+    saveNav();
+    lastFocus = opener || document.activeElement;
+  }
+  $$('.screen, .tabbar').forEach(x => { x.inert = true; });
+  layer.hidden = false; sheetState = 'open';
+  sheetEl.scrollTop = 0; sheetEl.style.transform = ''; sheetEl.style.transition = '';
+  requestAnimationFrame(() => requestAnimationFrame(() => layer.classList.add('open')));
+  setTimeout(() => { if (sheetState === 'open') $('.sheet-close', layer).focus({ preventScroll: true }); }, 40);
+}
+function finishSheet() { clearTimeout(sheetTimer); layer.hidden = true; sheetBody.innerHTML = ''; sheetState = 'closed'; }
+function hideSheet(immediate) {
+  if (sheetState === 'closed') return;
+  if (sheetState === 'closing') { if (immediate) finishSheet(); return; }
+  sheetState = 'closing';
+  layer.classList.remove('open');
+  sheetEl.style.transition = ''; sheetEl.style.transform = '';
+  $$('.screen, .tabbar').forEach(x => { x.inert = false; });
+  clearTimeout(sheetTimer);
+  if (immediate || reduceMotion) finishSheet(); else sheetTimer = setTimeout(finishSheet, 280);
+  if (!immediate && lastFocus && document.contains(lastFocus) && lastFocus.offsetParent !== null) lastFocus.focus({ preventScroll: true });
+}
+function closeSheet() {
+  if (sheetState !== 'open') return;
+  const isEntry = stack[navIdx] && stack[navIdx].sheet;
+  hideSheet(false);
+  if (isEntry) { expectPop('sheet', 'none'); history.back(); }
+}
+layer.addEventListener('click', e => { if (e.target === layer) closeSheet(); });
+document.addEventListener('keydown', e => {
+  if (sheetState !== 'open') return;
+  if (e.key === 'Escape') { e.preventDefault(); closeSheet(); return; }
+  if (e.key !== 'Tab') return;
+  const f = $$('button:not([disabled]), [href], input:not([disabled]), select, textarea, [contenteditable="true"]', sheetEl).filter(x => x.offsetParent !== null);
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
+
+/* ------------------------------------------------------------------ gestures */
+// drag a sheet down to dismiss it
+let sd = null;
+sheetEl.addEventListener('touchstart', e => {
+  if (sheetState !== 'open' || e.touches.length !== 1 || sheetEl.scrollTop > 0) return;
+  if (e.target.closest('textarea, input, select, [contenteditable="true"]')) return;
+  sd = { y0: e.touches[0].clientY, dy: 0, t0: performance.now(), on: false };
+}, { passive: true });
+sheetEl.addEventListener('touchmove', e => {
+  if (!sd) return;
+  const dy = e.touches[0].clientY - sd.y0;
+  if (!sd.on) {
+    if (dy < -6 || sheetEl.scrollTop > 0) { sd = null; return; }
+    if (dy < 8) return;
+    sd.on = true; sheetEl.style.transition = 'none';
+  }
+  e.preventDefault();
+  sd.dy = Math.max(0, dy);
+  sheetEl.style.transform = `translateY(${sd.dy}px)`;
+}, { passive: false });
+function sheetDragEnd() {
+  if (!sd) return; const s = sd; sd = null; if (!s.on) return;
+  const v = s.dy / Math.max(1, performance.now() - s.t0);
+  sheetEl.style.transition = '';
+  if (s.dy > 110 || (v > 0.6 && s.dy > 30)) closeSheet();
+  else sheetEl.style.transform = '';
+}
+sheetEl.addEventListener('touchend', sheetDragEnd);
+sheetEl.addEventListener('touchcancel', sheetDragEnd);
+
+// swipe from the left edge to go back (full-screen app + Android; iOS Safari has its own)
+const swipeEnabled = isTouch && (isStandalone || !isIOS);
+let sw = null;
+device.addEventListener('touchstart', e => {
+  if (!swipeEnabled || sheetState !== 'closed' || pendingPop || e.touches.length !== 1 || !current) return;
+  const t = e.touches[0], r = device.getBoundingClientRect();
+  if (t.clientX - r.left > 28) return;
+  const btn = current.querySelector(':scope > .topbar [data-back]:not([hidden])');
+  if (!btn) return;
+  sw = { x0: t.clientX, y0: t.clientY, t0: performance.now(), dx: 0, started: false, fallback: btn.dataset.back, w: r.width };
+}, { passive: true });
+device.addEventListener('touchmove', e => {
+  if (!sw) return;
+  const t = e.touches[0], dx = t.clientX - sw.x0, dy = t.clientY - sw.y0;
+  if (!sw.started) {
+    if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) { sw = null; return; }
+    if (dx < 10) return;
+    sw.started = true; swipeBegin(sw);
+  }
+  e.preventDefault();
+  sw.dx = Math.max(0, dx);
+  const p = Math.min(1, sw.dx / sw.w);
+  sw.top.style.transform = `translateX(${sw.dx}px)`;
+  if (sw.under) sw.under.style.transform = `translateX(${-30 + 30 * p}%)`;
+}, { passive: false });
+device.addEventListener('touchend', () => { if (!sw) return; const s = sw; sw = null; if (s.started) swipeEnd(s, false); });
+device.addEventListener('touchcancel', () => { if (!sw) return; const s = sw; sw = null; if (s.started) swipeEnd(s, true); });
+function swipeBegin(s) {
+  const under = ROUTES[idOf(backTarget(s.fallback).route)];
+  s.top = current; s.under = under && under !== current ? under : null;
+  clearAnim(s.top); s.top.classList.add('swipe-top'); s.top.style.transition = 'none';
+  if (s.under) { clearAnim(s.under); s.under.classList.add('active', 'swipe-under'); s.under.style.transition = 'none'; s.under.style.transform = 'translateX(-30%)'; }
+}
+function swipeEnd(s, cancelled) {
+  const v = s.dx / Math.max(1, performance.now() - s.t0);
+  const commit = !cancelled && (s.dx > s.w * 0.35 || (v > 0.5 && s.dx > 40));
+  const ease = 'transform .24s cubic-bezier(.2,.8,.2,1)';
+  s.top.style.transition = ease; if (s.under) s.under.style.transition = ease;
+  if (commit) {
+    s.top.style.transform = `translateX(${s.w}px)`; if (s.under) s.under.style.transform = 'translateX(0)';
+    haptic();
+    setTimeout(() => back(s.fallback, 'none'), 240);
+  } else {
+    s.top.style.transform = 'translateX(0)'; if (s.under) s.under.style.transform = 'translateX(-30%)';
+    setTimeout(() => { clearAnim(s.top); if (s.under) { clearAnim(s.under); if (s.under !== current) s.under.classList.remove('active'); } }, 240);
+  }
+}
+
+/* ------------------------------------------------------------------ keyboard: keep the composer above it */
+const vv = window.visualViewport;
+function syncViewport() {
+  if (!vv || !isIOS || framedMQ.matches) return;
+  if (window.innerHeight - vv.height > 120) { document.documentElement.style.setProperty('--vvh', vv.height + 'px'); window.scrollTo(0, 0); }
+  else document.documentElement.style.removeProperty('--vvh');
+}
+if (vv) { vv.addEventListener('resize', syncViewport); vv.addEventListener('scroll', syncViewport); }
+const TYPEABLE = 'input[type="text"], input:not([type]), textarea, [contenteditable="true"]';
+document.addEventListener('focusin', e => {
+  if (!isTouch || !(e.target instanceof Element) || !e.target.matches(TYPEABLE)) return;
+  device.classList.add('kb-open');
+  if (e.target.id === 'askInput') setTimeout(scrollChat, 300);
+});
+document.addEventListener('focusout', () => {
+  setTimeout(() => {
+    const a = document.activeElement;
+    if (!(a instanceof Element) || !a.matches(TYPEABLE)) device.classList.remove('kb-open');
+    syncViewport();
+  }, 60);
+});
+
+/* ------------------------------------------------------------------ app shell: splash, install, offline */
+const splash = $('#splash');
+async function launch(route) {
+  if (reduceMotion) { push(route, 'fade'); return; }
+  splash.hidden = false; splash.classList.remove('out'); void splash.offsetWidth; splash.classList.add('in');
+  await sleep(480);
+  push(route, 'none');
+  splash.classList.add('out');
+  await sleep(260);
+  splash.hidden = true; splash.classList.remove('in', 'out');
+}
+let deferredPrompt = null;
+function updateInstallHint() {
+  const hint = $('#installHint'); if (!hint) return;
+  const show = isTouch && !isStandalone && !framedMQ.matches;
+  hint.hidden = !show; if (!show) return;
+  const txt = $('#installText'), btn = $('#installBtn');
+  btn.hidden = !deferredPrompt;
+  txt.textContent = isIOS
+    ? 'Tap Share, then “Add to Home Screen”. GSKGO then opens full-screen, with no browser bars.'
+    : deferredPrompt ? 'Install GSKGO to open it full-screen, like a real app.'
+      : 'Open the browser menu ⋮ and choose “Add to Home screen”.';
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; updateInstallHint(); }); // no surprise mini-infobar mid-demo
+window.addEventListener('appinstalled', () => { deferredPrompt = null; updateInstallHint(); });
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
+
+/* ------------------------------------------------------------------ item screen */
+function rateHTML(id) {
+  const v = S.hcp.ratings[id];
+  let after = '';
+  if (v && v <= 2) after = `<p class="rate-msg">Thanks. What missed the mark?</p><div class="chips-wrap">${['Not my patients', 'Already knew this', 'Too long', 'Felt promotional'].map(x => `<button class="chip" data-act="reason" aria-pressed="false">${x}</button>`).join('')}</div>`;
+  else if (v) after = `<p class="rate-msg ok">${icon('check')}Thanks, Dra. Martín. Next week’s briefing will reflect this.</p>`;
+  return `<h3>How relevant was this for you?</h3>
+    <div class="scale" role="group" aria-label="Relevance, 1 to 5">${[1, 2, 3, 4, 5].map(n => `<button class="scale-btn" data-act="rate" data-item="${id}" data-v="${n}" aria-pressed="${v === n}">${n}</button>`).join('')}</div>
+    <div class="scale-legend"><span>Not relevant</span><span>Very relevant</span></div>${after}
+    <span class="mtag" data-l="2">Emotional · relevance score (1–5)</span>`;
+}
+function renderItem(id) {
+  if (!ITEMS[id]) id = S.hcp.lastItem || 'second';
+  S.hcp.lastItem = id; S.hcp.read = S.hcp.read || {}; S.hcp.read[id] = true; save();
+  const it = ITEMS[id], c = S.hcp.consent;
+  let cont = '';
+  if (id === 'second' && c.rep) {
+    cont = `<figure class="callout">${icon('quote')}<div><blockquote>“Is there something simple to bring patients back for the second dose?”</blockquote><figcaption>You asked Laura Gómez on Tue 29 Sep. Shared with your permission. Laura will see you’ve read this, so she won’t repeat it.</figcaption></div></figure>
+       <span class="mtag" data-l="4">Strategic · continuity between rep and digital</span>`;
+  }
+  if (id === 'reminder') {
+    cont = `<figure class="callout">${icon('quote')}<div><blockquote>“Is there something simple to bring patients back for the second dose?”</blockquote><figcaption>You asked on Tue 29 Sep. 136 GPs asked something similar, so GSK made this card.</figcaption></div></figure>`;
+  }
+  const hint = it.regionHint && !c.personal
+    ? `<div class="callout plain">${icon('filter')}<p>Your region may cover more people. <button class="link inline" data-go="rules" data-dir="tab">Check your region’s rule</button> or <button class="link inline" data-go="you" data-dir="tab">personalise your briefing</button>.</p></div>` : '';
+  $('#itemBody').innerHTML = `
+    <span class="kicker ${it.kickerCls(c)}">${esc(it.kicker(c))}</span>
+    <h1 class="item-title mt8">${esc(it.title)}</h1>
+    <div class="feed-meta">${it.meta.map(m => `<span>${esc(m)}</span>`).join('')}</div>
+    <div class="row mt12"><button class="chip ok" data-sheet="about-approved" data-code="${it.code}">${icon('check')}Approved · ${esc(it.code)}${icon('info')}</button>${c.personal ? `<span class="chip ai tiny">${icon('spark')}Picked by AI</span>` : ''}</div>
+    ${cont}${hint}
+    <div class="item-body">
+      <p>${esc(it.intro)}</p>
+      <ol class="points">${it.points.map(([t, n]) => `<li><span>${esc(t)}<button class="cite" data-sheet="source" data-doc="${it.refs[n - 1]}" aria-label="Source ${n}">${n}</button></span></li>`).join('')}</ol>
+    </div>
+    <h2 class="section-title">Sources</h2>
+    <div class="stack">${it.refs.map((d, i) => `<button class="src" data-sheet="source" data-doc="${d}"><span class="cite">${i + 1}</span><span><strong>${esc(DOCS[d].title)}</strong><span class="sub">${DOCS[d].pub ? 'public source' : d + ' · approved source'}</span></span></button>`).join('')}</div>
+    <div class="stack mt16">
+      ${it.qr ? `<button class="btn block" data-sheet="qr">${icon('qr')}Show the patient leaflet (QR)</button><span class="mtag" data-l="3">ROI · content reuse</span>` : ''}
+      ${it.rules ? `<button class="btn secondary block" data-go="rules" data-dir="tab">${icon('rules')}Check a patient group</button>` : ''}
+      ${it.ask ? `<button class="btn secondary block" data-act="ask-about" data-ctx="${it.ask}">${icon('spark')}Ask a question about this</button>` : ''}
+    </div>
+    <div class="card rate mt16" id="rateBox">${rateHTML(id)}</div>
+    <button class="ae-row" data-sheet="ae">${icon('alert')}<span>Report a suspected side effect</span>${icon('chev')}</button>`;
+  $('#itemMid').textContent = it.title;
+  $('#bookmarkBtn').setAttribute('aria-pressed', S.hcp.saved && S.hcp.saved[id] ? 'true' : 'false');
+}
+
+/* ------------------------------------------------------------------ ask (simulated AI) */
+const AGE_RE = /\b\d{1,3}[- ]?(?:year[- ]old|years old|yo|años|anos)\b/i;
+const NAME_RE = /\b[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+ [A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?: [A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?\b/g;
+const NOT_NAMES = /^(Comunidad|Castilla|Ministerio|Medical|Is |What |Which |Can |Who |How |My |Mi |El |La |Los |Las |Una |Un )/;
+function redact(text) {
+  const removed = []; let t = text;
+  t = t.replace(NAME_RE, m => { if (NOT_NAMES.test(m)) return m; removed.push('name'); return '[name removed]'; });
+  t = t.replace(new RegExp(AGE_RE.source, 'gi'), () => { removed.push('age'); return '[age removed]'; });
+  return { text: t, removed: [...new Set(removed)] };
+}
+const AE_RE = /(side[- ]?effect|adverse|reaction|rash|fever|swelling|blister|hospital|after (?:the |her |his )?(?:vaccine|dose|injection|jab)|efecto(?:s)? (?:secundario|adverso)|reacci[oó]n|erupci[oó]n|fiebre|hinchaz|ampolla|ingres|tras la vacuna|despu[eé]s de la vacuna|despu[eé]s de la dosis)/i;
+const QA = {
+  who: {
+    q: 'Who does my region cover this season?',
+    steps: ['Searching 214 approved answers', 'Found 1 approved answer'], summary: 'Approved answer · 2 sources',
+    refs: ['MAD-CAL-2026', 'ES-HZ-0926-011'],
+    parts: [
+      { text: 'In Comunidad de Madrid this season: all adults aged 65 to 80, plus risk groups from 18.', cite: [1] },
+      { text: 'Check rules gives the answer for any age or risk group.', cite: [2] }
+    ],
+    actions: [{ label: 'Open Check rules', go: 'rules', primary: 1 }]
+  },
+  schedule: {
+    q: 'What is the two-dose schedule?',
+    steps: ['Searching 214 approved answers', 'Found 1 approved answer'], summary: 'Approved answer · 1 source',
+    refs: ['ES-HZ-SMPC'],
+    parts: [
+      { text: 'Two doses. The second is given 2 months after the first; if needed, it can be given up to 6 months after.', cite: [1] },
+      { text: 'For people who are or may become immunocompromised, the second dose can be given 1 to 2 months after the first.', cite: [1] }
+    ],
+    actions: [{ label: 'Second dose: 30-second reminder', go: 'item:second' }]
+  },
+  coadmin: {
+    q: 'Can it be given at the same visit as the flu vaccine?',
+    steps: ['Searching 214 approved answers', 'Found 1 approved answer'], summary: 'Approved answer · 1 source',
+    refs: ['ES-HZ-SMPC'],
+    parts: [
+      { text: 'Yes. The product information allows giving it at the same visit as an inactivated flu vaccine, at different injection sites.', cite: [1] },
+      { text: 'The flu campaign visit is a good moment to check shingles eligibility.' }
+    ],
+    actions: [{ label: 'Check your region’s rule', go: 'rules' }]
+  },
+  leaflet: {
+    q: 'Is there material I can give to patients?',
+    steps: ['Searching 214 approved answers', 'Found 1 approved answer'], summary: 'Approved answer · public source',
+    refs: [],
+    parts: [
+      { text: 'Yes: the Ministry of Health’s patient Q&A on shingles vaccination, in Spanish. Your patient can scan it from your screen.' }
+    ],
+    actions: [{ label: 'Show the QR', act: 'open-qr', primary: 1 }]
+  },
+  patient: {
+    guard: true,
+    steps: ['Checking your question', 'This is about an individual patient'], summary: 'Individual-patient question · not answered by AI',
+    refs: [],
+    parts: [
+      { text: 'I can’t advise on an individual patient. That decision stays with you.' },
+      { text: 'Here’s what I can do:' },
+      { li: 1, text: 'Show your region’s rule for an age or risk group' },
+      { li: 1, text: 'Pass your question to a GSK medical advisor (a person), without patient details' }
+    ],
+    actions: [{ label: 'Ask a medical advisor', act: 'open-mi', primary: 1 }, { label: 'Open Check rules', go: 'rules' }]
+  },
+  ae: {
+    guard: true, ae: true,
+    steps: ['Checking your question', 'This may be a side effect'], summary: 'Possible side effect · sent to Pharmacovigilance, not to AI',
+    refs: [],
+    parts: [
+      { text: 'This sounds like a possible side effect. Thank you for telling us.' },
+      { text: 'Reports go to GSK Pharmacovigilance, as the law requires. They are never shared with your rep or Marketing, and never used for content insights.' },
+      { text: 'Please complete the report so a safety specialist can follow up.' }
+    ],
+    actions: [{ label: 'Report the side effect', act: 'ae-start', primary: 1 }, { label: 'Report via notificaRAM (AEMPS)', act: 'ae-aemps' }]
+  },
+  compare: {
+    guard: true,
+    steps: ['Checking your question', 'Comparison with other products'], summary: 'Product comparison · not answered by AI',
+    refs: [],
+    parts: [
+      { text: 'I can’t compare products. For any other product, please see its own product information.' },
+      { text: 'A GSK medical advisor (a person) can answer scientific questions.' }
+    ],
+    actions: [{ label: 'Ask a medical advisor', act: 'open-mi', primary: 1 }]
+  },
+  fallback: {
+    guard: true,
+    steps: ['Searching 214 approved answers', 'No approved answer matches'], summary: 'No approved answer · not answered by AI',
+    refs: [],
+    parts: [
+      { text: 'I only give answers GSK Medical has already approved, and I couldn’t find one for this. I won’t guess.' },
+      { text: 'A GSK medical advisor (a person) can answer within 2 working days.' },
+      { text: 'Unanswered topics are counted (never your words) so GSK can fill content gaps.', fine: 1 }
+    ],
+    actions: [{ label: 'Ask a medical advisor', act: 'open-mi', primary: 1 }]
+  }
+};
+const chatLog = $('#chatLog'), askScroll = $('#askScroll'), suggestEl = $('#suggest'), composer = $('#composer'), askInput = $('#askInput');
+let busy = false, asked = new Set();
+
+function el(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+function scrollChat() { askScroll.scrollTop = askScroll.scrollHeight; }
+function resetChat() { chatLog.innerHTML = ''; asked = new Set(); busy = false; composer.classList.remove('busy'); }
+function aiShell(guard) {
+  const m = el('div', 'msg ai' + (guard ? ' guard' : ''));
+  m.innerHTML = `<div class="ai-head">${icon('spark')}GSKGO AI · approved answers</div>`;
+  chatLog.append(m); return m;
+}
+const citeBtn = (doc, n) => `<button class="cite" data-sheet="source" data-doc="${doc}" aria-label="Source ${n}">${n}</button>`;
+async function typeText(node, text) {
+  if (reduceMotion) { node.textContent = text; return; }
+  const words = text.split(' '); let out = '';
+  for (let i = 0; i < words.length; i++) {
+    out += (i ? ' ' : '') + words[i]; node.textContent = out;
+    if (i % 4 === 0) scrollChat();
+    await sleep(24);
+  }
+}
+function matchQ(q) {
+  const s = q.toLowerCase();
+  if (AE_RE.test(q)) return 'ae';
+  if (/(better than|compar|competitor|\bvs\.?\b|versus|other brand|mejor que)/.test(s)) return 'compare';
+  if (AGE_RE.test(q) || /(my patient|mi paciente|\bshe\b|\bhe\b|\bher\b|\bhis\b|pregnan|embaraz|should i (?:give|vaccinate|prescribe)|for (?:a|my) patient)/.test(s)) return 'patient';
+  if (/(leaflet|handout|hand out|print|give (?:to )?(?:my )?patients|patient (?:version|material)|brochure|pdf|qr|folleto)/.test(s)) return 'leaflet';
+  if (/(flu|influenza|gripe|same visit|same day|co-?admin|together)/.test(s)) return 'coadmin';
+  if (/(second dose|2nd dose|two[- ]dose|schedule|interval|how many doses|segunda dosis|pauta|months apart)/.test(s)) return 'schedule';
+  if (/(cover|eligib|who (?:can|should|is|does|gets)|calendar|calendario|age group|risk group|incluid|financ|funded|qualif)/.test(s)) return 'who';
+  return 'fallback';
+}
+function renderSuggestions() {
+  const base = S.hcp.askCtx === 'second' ? ['schedule', 'leaflet', 'coadmin', 'who'] : S.hcp.askCtx === 'region' ? ['who', 'schedule', 'leaflet', 'coadmin'] : ['who', 'schedule', 'coadmin', 'leaflet'];
+  const keys = base.filter(k => !asked.has(k)).slice(0, 3);
+  suggestEl.innerHTML = (keys.length && !busy)
+    ? `<p class="suggest-label">Try asking</p>` + keys.map(k => `<button data-act="ask-key" data-key="${k}">${icon('spark')}<span>${esc(QA[k].q)}</span></button>`).join('')
+    : '';
+}
+function renderAsk() {
+  const ctxEl = $('#askCtx');
+  if (!S.hcp.consent.ai) { ctxEl.hidden = true; return; }
+  if (!chatLog.children.length) {
+    const m = aiShell();
+    m.append(el('p', '', 'Hi Dra. Martín. I find answers GSK Medical has already approved, and show where they come from.'));
+  }
+  const ctx = S.hcp.askCtx;
+  if (ctx && ITEMS[ctx]) {
+    ctxEl.hidden = false;
+    ctxEl.innerHTML = `<span>About: <strong>${esc(ITEMS[ctx].title)}</strong></span><button class="icon-btn" data-act="clear-ctx" aria-label="Clear topic">${icon('close')}</button>`;
+  } else ctxEl.hidden = true;
+  renderSuggestions();
+  requestAnimationFrame(scrollChat);
+}
+async function ask(key, text) {
+  if (busy) return;
+  busy = true; composer.classList.add('busy');
+  const qa = QA[key], raw = text || qa.q;
+  const red = redact(raw), q = red.text;
+  S.hcp.lastQ = { key, text: q }; save();
+  asked.add(key);
+  renderSuggestions();
+  const um = el('div', 'msg user'); um.textContent = q; chatLog.append(um); scrollChat();
+  if (red.removed.length) { await wait(300); chatLog.append(el('div', 'note', `${icon('shield')}<span>Patient details removed before anything was saved: ${esc(red.removed.join(', '))}</span>`)); scrollChat(); }
+  await wait(350);
+  const m = aiShell();
+  const steps = el('ol', 'steps'); m.append(steps); scrollChat();
+  for (const s of qa.steps) {
+    const li = el('li', '', `<span class="spin"></span><span>${esc(s)}…</span>`);
+    steps.append(li); scrollChat();
+    await wait(620);
+    li.innerHTML = `${icon('check')}<span>${esc(s)}</span>`;
+  }
+  await wait(200);
+  steps.replaceWith(el('div', 'steps-done', `${icon('check')}${esc(qa.summary)}`));
+  if (qa.guard) { m.classList.add('guard'); $('.ai-head', m).insertAdjacentHTML('beforeend', '<span class="guard-tag">Needs a person</span>'); }
+  let list = null;
+  for (const part of qa.parts) {
+    let node;
+    if (part.li) { if (!list) { list = el('ul'); m.append(list); } node = el('li'); list.append(node); }
+    else { list = null; node = el('p', part.fine ? 'fine' : ''); m.append(node); }
+    await typeText(node, part.text);
+    if (part.cite) part.cite.forEach(n => node.insertAdjacentHTML('beforeend', citeBtn(qa.refs[n - 1], n)));
+  }
+  if (qa.refs.length) {
+    m.append(el('div', 'srcs', `<span class="srcs-label">Sources</span>` + qa.refs.map((d, i) => `<button class="src" data-sheet="source" data-doc="${d}"><span class="cite">${i + 1}</span><span>${esc(DOCS[d].title)}</span></button>`).join('')));
+  }
+  const f = flags();
+  const acts = (qa.actions || []).filter(a => !a.if || f[a.if]);
+  if (acts.length) {
+    const row = el('div', 'msg-actions');
+    acts.forEach(a => {
+      const b = el('button', 'btn sm' + (a.primary ? '' : ' secondary'), esc(a.label));
+      if (a.go) b.dataset.go = a.go;
+      if (a.act) b.dataset.act = a.act;
+      if (a.ask) { b.dataset.act = 'ask-key'; b.dataset.key = a.ask; }
+      row.append(b);
+    });
+    m.append(row);
+  }
+  if (!qa.guard) m.append(el('div', 'helpful', `<span>Helpful?</span><button class="chip" data-act="helpful" data-v="1" aria-pressed="false">Yes</button><button class="chip" data-act="helpful" data-v="0" aria-pressed="false">No</button>`));
+  scrollChat();
+  busy = false; composer.classList.remove('busy');
+  renderSuggestions();
+  requestAnimationFrame(scrollChat);
+}
+function autosize() { askInput.style.height = 'auto'; askInput.style.height = Math.min(askInput.scrollHeight, 120) + 'px'; }
+function submitAsk() {
+  const q = askInput.value.trim();
+  if (!q || busy) return;
+  askInput.value = ''; autosize();
+  ask(matchQ(q), q);
+}
+composer.addEventListener('submit', e => { e.preventDefault(); submitAsk(); });
+askInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); submitAsk(); } });
+askInput.addEventListener('input', autosize);
+
+/* ------------------------------------------------------------------ marketing brief generation */
+let genRunning = false;
+const CLAIM3 = ['Most patients just need a reminder.', 'A simple reminder brings most patients back.'];
+function setClaim3() { const c = $('#claim3'); if (c) c.textContent = CLAIM3[S.mkt.variant % 2]; }
+async function generateBrief() {
+  if (genRunning) return;
+  genRunning = true;
+  const scr = ROUTES['m-brief'], gen = $('.gen', scr), out = $('.brief-out', scr);
+  gen.hidden = false; out.hidden = true; out.classList.remove('reveal');
+  const steps = $$('.gen-steps li', scr); steps.forEach(s => { s.className = ''; });
+  for (const s of steps) { s.className = 'active'; await wait(800); s.className = 'done'; }
+  await wait(250);
+  gen.hidden = true; out.hidden = false; void out.offsetWidth; out.classList.add('reveal');
+  S.mkt.briefReady = true; save(); applyIfs();
+  genRunning = false;
+}
+
+/* ------------------------------------------------------------------ briefing assembly (the starred AI moment) */
+let assembling = false;
+async function assemble() {
+  if (assembling) return;
+  assembling = true;
+  const box = $('#assemble'), content = $('#briefContent'), list = $('#assembleSteps'), c = S.hcp.consent;
+  const steps = c.personal
+    ? ['Your region: Comunidad de Madrid', 'Your topics: shingles, RSV, flu & COVID', c.rep ? 'Holding back what Laura already covered' : 'Holding back what’s outside your topics', 'Choosing 3 approved modules for this week']
+    : ['Standard briefing: same for every GP', 'Choosing 3 approved modules in fixed order'];
+  $('#assembleTitle').textContent = c.personal ? 'Assembling your briefing from 38 approved modules' : 'Loading the standard briefing';
+  list.innerHTML = steps.map(t => `<li>${esc(t)}</li>`).join('');
+  box.hidden = false; content.hidden = true; content.classList.remove('reveal');
+  for (const li of $$('li', list)) { li.className = 'active'; await wait(c.personal ? 560 : 380); li.className = 'done'; }
+  await wait(200);
+  box.hidden = true; content.hidden = false; void content.offsetWidth; content.classList.add('reveal');
+  S.hcp.assembled = true; save();
+  assembling = false;
+}
+
+/* ------------------------------------------------------------------ screen enter hooks */
+const ENTER = {
+  start() { syncLens(); },
+  consent() { syncConsentInputs(); },
+  verify() {
+    $('#verifyChecking').hidden = true;
+    $('#verifyOk').hidden = !S.hcp.verified;
+  },
+  briefing() {
+    if (!S.hcp.assembled && S.hcp.onboarded) assemble();
+    else if (!assembling) { $('#assemble').hidden = true; $('#briefContent').hidden = false; }
+  },
+  rules() {
+    // a tab root, but reached from an article it offers a way back, like Ask
+    const prev = stack[navIdx - 1];
+    $('#rulesBack').hidden = !(prev && !prev.sheet && idOf(prev.route) === 'item');
+    renderRules();
+  },
+  item(p) { renderItem(p); },
+  ask() {
+    const prev = stack[navIdx - 1];
+    $('#askBack').hidden = !(prev && !prev.sheet && idOf(prev.route) === 'item' && S.hcp.askCtx);
+    renderAsk();
+  },
+  you() { syncConsentInputs(); },
+  'm-brief'() {
+    setClaim3();
+    const scr = ROUTES['m-brief'];
+    if (!S.mkt.briefReady) generateBrief();
+    else if (!genRunning) { $('.gen', scr).hidden = true; $('.brief-out', scr).hidden = false; }
+  }
+};
+
+/* ------------------------------------------------------------------ actions */
+const CONSENT_MSG = {
+  personal: ['Personalisation off: standard briefing from now on.', 'Personalisation on. Your next briefing will reflect your topics.'],
+  rep: ['Laura will no longer see your activity in GSKGO.', 'Connected with Laura. She’ll see what you read and ask.'],
+  ai: ['AI answers off. You can still ask a medical advisor.', 'AI-assisted answers on.']
+};
+const ACT = {
+  'start-hcp'() { S.hcp = DEFAULT().hcp; resetChat(); save(); syncConsentInputs(); push('lock'); },
+  'start-mkt'() { S.mkt = DEFAULT().mkt; save(); push('m-home'); },
+  'open-notif'() { haptic(); launch(!S.hcp.onboarded ? (S.hcp.verified ? 'consent' : 'verify') : (S.hcp.loop ? 'item:reminder' : 'briefing')); },
+  async verify(t) {
+    if (S.hcp.verified) { replace('consent', 'fwd'); return; } // onboarding is one step in history: Back from the briefing exits to the lock screen
+    const inp = $('#colegiado'), ok = /^\d{2}\s*\/?\s*\d{5,7}$/.test(inp.value.trim());
+    $('#verifyErr').hidden = ok; inp.setAttribute('aria-invalid', ok ? 'false' : 'true'); if (!ok) { inp.focus(); return; }
+    t.disabled = true;
+    $('#verifyChecking').hidden = false;
+    await wait(900);
+    $('#verifyChecking').hidden = true; $('#verifyOk').hidden = false; haptic();
+    S.hcp.verified = true; save();
+    await wait(700);
+    t.disabled = false;
+    replace('consent', 'fwd');
+  },
+  rule(t) { S.hcp.rule[t.dataset.k] = t.dataset.v; save(); haptic(); renderRules(); },
+  'open-qr'(t) { openSheet('qr', t); },
+  'ae-start'() { closeSheet(); toast('Opening the GSK safety report form (simulated). It goes to Pharmacovigilance only.'); },
+  'ae-aemps'() { closeSheet(); toast('Opening notificaRAM.es, the Spanish reporting system (simulated)'); },
+  'unsub-all'() { S.hcp.consent = { personal: false, rep: false, ai: false }; S.hcp.paused = true; S.hcp.assembled = false; save(); syncConsentInputs(); applyIfs(); toast('Unsubscribed from everything. You can come back any time.'); },
+  'consent-continue'() {
+    S.hcp.onboarded = true; S.hcp.assembled = false; save(); replace('briefing', 'fwd'); // onboarding leaves the stack, like a real app
+    const n = Object.values(S.hcp.consent).filter(Boolean).length;
+    if (n) toast(`Saved: ${n} of 3 on. Change any time in Me.`);
+  },
+  'consent-skip'() {
+    S.hcp.consent = { personal: false, rep: false, ai: false }; S.hcp.onboarded = true; S.hcp.assembled = false; save(); syncConsentInputs(); replace('briefing', 'fwd');
+    toast('Standard briefing. You can personalise any time.');
+  },
+  seat() { S.hcp.seat = true; save(); applyIfs(); haptic(); toast('Seat saved and added to your calendar'); },
+  rate(t) {
+    const id = t.dataset.item; S.hcp.ratings[id] = +t.dataset.v; save(); haptic();
+    $('#rateBox').innerHTML = rateHTML(id);
+    const pressed = $('#rateBox .scale-btn[aria-pressed="true"]'); if (pressed) pressed.focus({ preventScroll: true });
+  },
+  reason(t) { t.setAttribute('aria-pressed', 'true'); toast('Got it. Fewer items like this.'); },
+  leaflet(t) { openSheet('qr', t); },
+  'email-leaflet'() { toast('Leaflet sent to your registered email (simulated)'); },
+  'open-pdf'() { closeSheet(); toast('Opening the approved PDF (simulated)'); },
+  'ask-about'(t) { S.hcp.askCtx = t.dataset.ctx; save(); push('ask'); },
+  'clear-ctx'() { S.hcp.askCtx = null; save(); renderAsk(); },
+  'ask-key'(t) { ask(t.dataset.key); },
+  'open-mi'(t) { openSheet('mi', t); },
+  'send-mi'() {
+    const ta = $('#miText', sheetBody);
+    if (!ta.value.trim()) { ta.focus(); toast('Please add your question first'); return; }
+    S.hcp.miRef = 'MI-2026-1047'; save(); haptic(); closeSheet(); applyIfs();
+    if (current === ROUTES.ask && S.hcp.consent.ai) {
+      chatLog.append(el('div', 'msg sys', `${icon('check')}<span>Sent to GSK Medical Information · ref MI-2026-1047 · reply by Wed 7 Oct</span>`));
+      requestAnimationFrame(scrollChat);
+    }
+    toast('Request sent. A medical advisor will reply by Wed 7 Oct.');
+  },
+  'save-rep'(t) { t.disabled = true; t.textContent = 'Saved for Laura'; toast('Saved. Laura will see it in her visit prep. Remove it any time.'); },
+  'ai-on'() { S.hcp.consent.ai = true; save(); syncConsentInputs(); applyIfs(); renderAsk(); toast('AI-assisted answers on.'); },
+  helpful(t) {
+    $$('.chip', t.parentElement).forEach(c => { c.setAttribute('aria-pressed', c === t ? 'true' : 'false'); c.disabled = true; });
+    toast(t.dataset.v === '1' ? 'Thanks, noted.' : 'Thanks. We’ll flag this answer for review.');
+  },
+  topic(t) { t.setAttribute('aria-pressed', t.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); toast('Topics updated. Next briefing will reflect this.'); },
+  pause() { S.hcp.paused = !S.hcp.paused; save(); applyIfs(); toast(S.hcp.paused ? 'Paused until Wed 4 Nov' : 'Briefings resumed'); },
+  'withdraw-personal'() {
+    S.hcp.consent.personal = false; S.hcp.assembled = false; save(); closeSheet(); syncConsentInputs(); applyIfs();
+    toast(CONSENT_MSG.personal[0]);
+  },
+  'show-held'() { closeSheet(); toast('Added to your library'); },
+  'remove-summary'() { S.hcp.repRemoved = true; save(); applyIfs(); toast('Summary removed. Laura has been told.'); },
+  'remove-inference'() { S.hcp.inferRemoved = true; save(); applyIfs(); toast('Removed. We won’t use this inference.'); },
+  'download-data'() { toast('Preparing your data export (simulated)'); },
+  'confirm-delete'() { closeSheet(); toast('Deletion requested. Done within 30 days (simulated).'); },
+  decide(t) {
+    const k = t.dataset.k, v = t.dataset.v;
+    S.mkt[k] = v; save(); haptic(); closeSheet(); applyIfs();
+    const msg = {
+      fatigueA: 'Paused for 214 GPs. Their reps already covered it.',
+      channelA: 'Q4 webinars moved to 20:30. Registered GPs notified.'
+    }[k + v] || 'Dismissed. We’ll ask again if the signal grows.';
+    toast(msg);
+  },
+  snooze() { back('m-home'); toast('Snoozed for 7 days'); },
+  regen() {
+    S.mkt.variant = (S.mkt.variant + 1) % 2; S.mkt.briefReady = false; save(); applyIfs(); setClaim3();
+    ROUTES['m-brief'].querySelector('.scroll').scrollTop = 0;
+    generateBrief();
+  },
+  'approve-plan'() { S.mkt.submitted = true; save(); haptic(); push('m-done'); },
+  'see-hcp'() {
+    if (S.mkt.submitted) {
+      if (!S.hcp.onboarded) { S.hcp.verified = S.hcp.onboarded = true; S.hcp.consent.personal = S.hcp.consent.rep = true; S.hcp.assembled = false; syncConsentInputs(); }
+      S.hcp.loop = true; save(); applyIfs(); push('lock'); return;
+    }
+    push(S.hcp.onboarded ? 'briefing' : 'lock');
+  },
+  bookmark(t) {
+    const id = S.hcp.lastItem || 'second'; S.hcp.saved = S.hcp.saved || {};
+    S.hcp.saved[id] = !S.hcp.saved[id]; save(); haptic();
+    t.setAttribute('aria-pressed', S.hcp.saved[id] ? 'true' : 'false');
+    toast(S.hcp.saved[id] ? 'Saved to your library' : 'Removed from your library');
+  },
+  install() { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt.userChoice.finally(() => { deferredPrompt = null; updateInstallHint(); }); },
+  reset() {
+    const lens = S.lens; S = DEFAULT(); S.lens = lens; save(); resetChat(); syncConsentInputs();
+    applyIfs(); backTo('start', 'fade'); toast('Demo reset');
+  }
+};
+
+/* ------------------------------------------------------------------ event wiring */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-go],[data-back],[data-sheet],[data-act],[data-close]');
+  if (!t || t.disabled) return;
+  if (t.hasAttribute('data-close')) { e.preventDefault(); closeSheet(); return; }
+  if (t.hasAttribute('data-back')) { e.preventDefault(); back(t.dataset.back || null); return; }
+  if (t.dataset.go) { e.preventDefault(); nav(t.dataset.go, t.dataset.dir); return; }
+  if (t.dataset.sheet) { e.preventDefault(); openSheet(t.dataset.sheet, t); return; }
+  if (t.dataset.act && ACT[t.dataset.act]) { e.preventDefault(); ACT[t.dataset.act](t, e); }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.matches('input[data-lens]')) { S.lens = t.checked; save(); syncLens(); return; }
+  if (t.matches('#miConsent')) { const b = $('#miSend', sheetBody); if (b) b.disabled = !t.checked; return; }
+  if (t.matches('input[data-consent]')) {
+    haptic();
+    const k = t.dataset.consent, on = t.checked, scr = t.closest('.screen');
+    if (scr && scr.dataset.screen === 'consent') { S.hcp.consent[k] = on; save(); updateConsentSummary(); return; }
+    if (!on && k === 'personal') { t.checked = true; openSheet('withdraw', t); return; }
+    S.hcp.consent[k] = on; if (k !== 'ai') S.hcp.assembled = false; save(); syncConsentInputs(); applyIfs();
+    toast(CONSENT_MSG[k][on ? 1 : 0]);
+    return;
+  }
+  if (t.matches('select[data-rule]')) { S.hcp.rule.region = t.value; save(); renderRules(); return; }
+  if (t.matches('[data-pref]')) toast('Preferences saved');
+});
+
+/* QR code for the presenter panel (only when hosted on http/https) */
+window.addEventListener('load', () => {
+  try {
+    if (!/^https?:$/.test(location.protocol) || typeof window.qrcode !== 'function') return;
+    const qr = window.qrcode(0, 'M');
+    qr.addData(location.origin + location.pathname);
+    qr.make();
+    $('#qr').innerHTML = qr.createSvgTag(4, 0);
+    $('#ppQr').hidden = false;
+  } catch (e) { /* QR is optional */ }
+});
+
+function initNav() {
+  let saved = null; try { saved = JSON.parse(sessionStorage.getItem(NAVKEY) || 'null'); } catch (e) {}
+  const route = routeFromHash(), st = history.state;
+  if (st && typeof st.idx === 'number' && saved && Array.isArray(saved.stack) && saved.stack[st.idx] && saved.stack[st.idx].route === route) {
+    stack = saved.stack.slice(0, st.idx + 1); navIdx = st.idx;
+  } else { stack = [{ route }]; navIdx = 0; }
+  stack[navIdx] = { route };
+  history.replaceState({ idx: navIdx, route }, '', '#/' + route);
+  saveNav(); render('fade');
+}
+
+syncLens();
+syncConsentInputs();
+updateInstallHint();
+initNav();
+})();
+</script>
+</body>
+</html>
