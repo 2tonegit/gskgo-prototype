@@ -111,6 +111,9 @@ ol,ul{padding:0}
 .screen.pad-tabs{padding-bottom:calc(var(--tabs-h) + var(--sab))}
 .topbar{flex:none;display:flex;align-items:center;gap:8px;min-height:52px;padding:calc(var(--sat) + 4px) 12px 4px;background:var(--bg);position:relative;z-index:2}
 .topbar.app{padding-left:16px;justify-content:space-between}
+.topbar.app.has-back{padding-left:6px}
+.topbar.has-back .topbar-title{margin:0;position:absolute;left:50%;transform:translateX(-50%);bottom:4px;min-height:44px;display:flex;align-items:center;max-width:40%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.back-btn .bl{max-width:118px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .topbar-title{font-size:17px;font-weight:700;letter-spacing:-.01em}
 .topbar .mid{position:absolute;left:108px;right:108px;bottom:16px;text-align:center;font-weight:600;font-size:15.5px;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .back-btn{display:inline-flex;align-items:center;min-height:44px;padding:0 10px 0 0;border-radius:12px;font-weight:600;color:var(--brand);font-size:16px}
@@ -308,7 +311,7 @@ select.input,.select{appearance:none;-webkit-appearance:none;background:var(--su
 @keyframes notifIn{from{opacity:0;transform:translateY(-12px) scale(.97)}to{opacity:1;transform:none}}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}50%{box-shadow:0 0 0 6px rgba(255,255,255,.08)}}
 .lock-hint{margin-top:auto;font-size:13px;opacity:.72;display:flex;align-items:center;gap:6px}
-.lock-exit{position:absolute;z-index:3;top:calc(var(--sat) + 6px);left:12px;display:inline-flex;align-items:center;gap:2px;min-height:36px;padding:0 10px 0 4px;border-radius:10px;color:rgba(255,255,255,.8);font-size:13.5px;font-weight:600}
+.lock-exit{position:absolute;z-index:3;top:calc(var(--sat) + 8px);left:12px;display:inline-flex;align-items:center;gap:2px;min-height:40px;padding:0 14px 0 6px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:600;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .lock-exit .ic{width:20px;height:20px}
 .lock .mtag{margin-top:14px}
 
@@ -713,7 +716,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== HCP: LOCK SCREEN ===================== -->
     <section class="screen lock" data-screen="lock" data-status="light" tabindex="-1" aria-label="Phone lock screen">
-      <button class="lock-exit" data-go="start" data-dir="back"><svg class="ic"><use href="#i-back"/></svg>Demo</button>
+      <button class="lock-exit" data-go="start" data-dir="back"><svg class="ic"><use href="#i-back"/></svg>Profiles</button>
       <div class="lock-inner">
         <svg class="ic lock-ic"><use href="#i-lock"/></svg>
         <div class="clock">8:12</div>
@@ -781,7 +784,8 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== HCP: BRIEFING ===================== -->
     <section class="screen" data-screen="briefing" data-tabs="hcp" tabindex="-1" aria-labelledby="briefTitle">
-      <header class="topbar app">
+      <header class="topbar app has-back">
+        <button class="back-btn" data-back="lock"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button>
         <div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span></div>
         <button class="avatar av-hcp sm" data-go="you" data-dir="tab" aria-label="Your preferences and privacy">LM</button>
       </header>
@@ -888,7 +892,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== HCP: CHECK RULES ===================== -->
     <section class="screen" data-screen="rules" data-tabs="hcp" tabindex="-1" aria-labelledby="rulesTitle">
-      <header class="topbar app"><button class="back-btn" id="rulesBack" data-back="briefing" hidden><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button><h1 class="topbar-title" id="rulesTitle">Check rules</h1><span class="chip brand tiny">Shingles · 2026</span></header>
+      <header class="topbar app has-back"><button class="back-btn" id="rulesBack" data-back="briefing"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button><h1 class="topbar-title" id="rulesTitle">Check rules</h1><span class="chip brand tiny">Shingles · 2026</span></header>
       <div class="scroll">
         <div class="banner info"><svg class="ic"><use href="#i-info"/></svg><p><strong>Reference only, not a clinical decision tool.</strong> Pick a group, never a patient: no names, IDs or dates of birth.</p></div>
         <span class="mtag" data-l="1">Functional · rule found in under 2 min</span>
@@ -928,8 +932,8 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== HCP: ASK ===================== -->
     <section class="screen pad-tabs" data-screen="ask" data-tabs="hcp" tabindex="-1" aria-labelledby="askTitle">
-      <header class="topbar app">
-        <button class="back-btn" id="askBack" data-back="briefing" hidden><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button>
+      <header class="topbar app has-back">
+        <button class="back-btn" id="askBack" data-back="briefing"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button>
         <h1 class="topbar-title" id="askTitle">Ask</h1>
         <span class="chip ai"><svg class="ic"><use href="#i-spark"/></svg>AI assistant</span>
       </header>
@@ -961,7 +965,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== HCP: YOU / PREFERENCES ===================== -->
     <section class="screen" data-screen="you" data-tabs="hcp" tabindex="-1" aria-labelledby="youTitle">
-      <header class="topbar app"><h1 class="topbar-title" id="youTitle">Me</h1></header>
+      <header class="topbar app has-back"><button class="back-btn" data-back="briefing"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button><h1 class="topbar-title" id="youTitle">Me</h1></header>
       <div class="scroll">
         <div class="card flat profile"><span class="avatar av-hcp">LM</span><div><strong>Dra. Lucía Martín</strong><div class="muted">Family medicine · Comunidad de Madrid · verified</div></div></div>
         <span class="mtag" data-l="4">Strategic · consent kept at 6 months</span>
@@ -1080,7 +1084,8 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== MARKETING: HOME ===================== -->
     <section class="screen" data-screen="m-home" data-tabs="mkt" tabindex="-1" aria-labelledby="mTitle">
-      <header class="topbar app">
+      <header class="topbar app has-back">
+        <button class="back-btn" data-back="start"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button>
         <div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span><span class="chip brand tiny">Marketing</span></div>
         <button class="avatar av-mkt sm" data-sheet="m-menu" aria-label="Account menu">JO</button>
       </header>
@@ -1293,7 +1298,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== MARKETING: PIPELINE ===================== -->
     <section class="screen" data-screen="m-pipeline" data-tabs="mkt" tabindex="-1" aria-labelledby="mpiTitle">
-      <header class="topbar app"><h1 class="topbar-title" id="mpiTitle">Pipeline</h1><button class="avatar av-mkt sm" data-sheet="m-menu" aria-label="Account menu">JO</button></header>
+      <header class="topbar app has-back"><button class="back-btn" data-back="m-home"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button><h1 class="topbar-title" id="mpiTitle">Pipeline</h1><button class="avatar av-mkt sm" data-sheet="m-menu" aria-label="Account menu">JO</button></header>
       <div class="scroll">
         <p class="lead">Every asset and decision, with who’s accountable.</p>
         <div class="list-card mt16">
@@ -1745,12 +1750,12 @@ const isIOS = !/Android/i.test(navigator.userAgent) && (/iP(hone|ad|od)/.test(na
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 const framedMQ = window.matchMedia('(min-width:700px) and (min-height:620px)');
-const haptic = () => { try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {} };
+const haptic = () => { try { if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(8); } catch (e) {} };
 
 const GROUP = { start: 'demo', lock: 'os', verify: 'onboard', consent: 'onboard', briefing: 'hcp', item: 'hcp', rules: 'hcp', ask: 'hcp', you: 'hcp', data: 'hcp' };
-const PARENT = { lock: 'start', verify: 'lock', consent: 'verify', briefing: 'lock', item: 'briefing', rules: 'briefing', ask: 'briefing', you: 'lock', data: 'you',
-  'm-home': 'start', 'm-pipeline': 'start', 'm-insight': 'm-home', 'm-brief': 'm-insight', 'm-plan': 'm-brief', 'm-done': 'm-home' };
-const TITLES = { start: 'Demo', lock: 'Lock screen', verify: 'Verify', consent: 'Consent', briefing: 'This week', item: 'Article', rules: 'Check rules', ask: 'Ask', you: 'Me', data: 'Your data',
+const PARENT = { lock: 'start', verify: 'lock', consent: 'verify', briefing: 'lock', item: 'briefing', rules: 'briefing', ask: 'briefing', you: 'briefing', data: 'you',
+  'm-home': 'start', 'm-pipeline': 'm-home', 'm-insight': 'm-home', 'm-brief': 'm-insight', 'm-plan': 'm-brief', 'm-done': 'm-home' };
+const TITLES = { start: 'Profiles', lock: 'Lock screen', verify: 'Verify', consent: 'Consent', briefing: 'This week', item: 'Article', rules: 'Check rules', ask: 'Ask', you: 'Me', data: 'Your data',
   'm-home': 'Insights', 'm-insight': 'Insight', 'm-brief': 'Brief', 'm-plan': 'Plan', 'm-done': 'Back', 'm-pipeline': 'Pipeline' };
 const idOf = r => String(r || '').split(':')[0];
 const groupOf = r => { const id = idOf(r); return id.startsWith('m-') ? 'mkt' : (GROUP[id] || id); };
@@ -1801,7 +1806,7 @@ function replace(route, dir = 'fade') {
 function backTarget(fallback) {
   const prev = stack[navIdx - 1];
   const parent = fallback || PARENT[idOf(curRoute)] || 'start';
-  if (navIdx > 0 && prev && !prev.sheet && (groupOf(prev.route) === groupOf(curRoute) || idOf(prev.route) === idOf(parent))) return { route: prev.route, history: true };
+  if (navIdx > 0 && prev && !prev.sheet) return { route: prev.route, history: true };
   return { route: parent, history: false };
 }
 function back(fallback, dir = 'back') {
@@ -2457,18 +2462,9 @@ const ENTER = {
     if (!S.hcp.assembled && S.hcp.onboarded) assemble();
     else if (!assembling) { $('#assemble').hidden = true; $('#briefContent').hidden = false; }
   },
-  rules() {
-    // a tab root, but reached from an article it offers a way back, like Ask
-    const prev = stack[navIdx - 1];
-    $('#rulesBack').hidden = !(prev && !prev.sheet && idOf(prev.route) === 'item');
-    renderRules();
-  },
+  rules() { renderRules(); },
   item(p) { renderItem(p); },
-  ask() {
-    const prev = stack[navIdx - 1];
-    $('#askBack').hidden = !(prev && !prev.sheet && idOf(prev.route) === 'item' && S.hcp.askCtx);
-    renderAsk();
-  },
+  ask() { renderAsk(); },
   you() { syncConsentInputs(); },
   'm-brief'() {
     setClaim3();
