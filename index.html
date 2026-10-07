@@ -111,9 +111,6 @@ ol,ul{padding:0}
 .screen.pad-tabs{padding-bottom:calc(var(--tabs-h) + var(--sab))}
 .topbar{flex:none;display:flex;align-items:center;gap:8px;min-height:52px;padding:calc(var(--sat) + 4px) 12px 4px;background:var(--bg);position:relative;z-index:2}
 .topbar.app{padding-left:16px;justify-content:space-between}
-.topbar.app.has-back{padding-left:6px}
-.topbar.has-back .topbar-title{margin:0;position:absolute;left:50%;transform:translateX(-50%);bottom:4px;min-height:44px;display:flex;align-items:center;max-width:40%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
-.back-btn .bl{max-width:118px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .topbar-title{font-size:17px;font-weight:700;letter-spacing:-.01em}
 .topbar .mid{position:absolute;left:108px;right:108px;bottom:16px;text-align:center;font-weight:600;font-size:15.5px;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .back-btn{display:inline-flex;align-items:center;min-height:44px;padding:0 10px 0 0;border-radius:12px;font-weight:600;color:var(--brand);font-size:16px}
@@ -311,7 +308,7 @@ select.input,.select{appearance:none;-webkit-appearance:none;background:var(--su
 @keyframes notifIn{from{opacity:0;transform:translateY(-12px) scale(.97)}to{opacity:1;transform:none}}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}50%{box-shadow:0 0 0 6px rgba(255,255,255,.08)}}
 .lock-hint{margin-top:auto;font-size:13px;opacity:.72;display:flex;align-items:center;gap:6px}
-.lock-exit{position:absolute;z-index:3;top:calc(var(--sat) + 8px);left:12px;display:inline-flex;align-items:center;gap:2px;min-height:40px;padding:0 14px 0 6px;border-radius:12px;color:#fff;font-size:14.5px;font-weight:600;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.lock-exit{position:absolute;z-index:3;top:calc(var(--sat) + 6px);left:12px;display:inline-flex;align-items:center;gap:2px;min-height:36px;padding:0 10px 0 4px;border-radius:10px;color:rgba(255,255,255,.8);font-size:13.5px;font-weight:600}
 .lock-exit .ic{width:20px;height:20px}
 .lock .mtag{margin-top:14px}
 
@@ -451,6 +448,21 @@ button.cite:active{background:var(--ai);color:#fff}
 .bar b{font-variant-numeric:tabular-nums}
 .bar-track{grid-column:1/-1;height:8px;border-radius:4px;background:var(--line-2);overflow:hidden}
 .bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--ai),var(--ai-2))}
+.dash-card{margin-top:12px;padding:14px;border-radius:16px;background:var(--surface);border:1px solid var(--line-2)}
+.dash-card h3{font-size:15px;margin:0 0 2px}
+.dash-card .cap{font-size:12.5px;color:var(--muted);margin:0 0 10px;line-height:1.4}
+.dbar{display:grid;grid-template-columns:1fr auto;gap:4px 8px;font-size:13.5px;margin-top:9px}
+.dbar b{font-variant-numeric:tabular-nums}
+.dbar .track{grid-column:1/-1;position:relative;height:9px;border-radius:5px;background:var(--line-2)}
+.dbar .fill{height:100%;border-radius:5px;background:var(--brand)}
+.dbar .fill.o{background:#F36633}.dbar .fill.g{background:#9AA3AD}
+.dbar .target{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+.target-lbl{display:flex;justify-content:flex-end;font-size:11.5px;font-weight:700;color:var(--ink);margin-top:4px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line-2)}
+.stat .v{display:block;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat .l{display:block;font-size:12px;color:var(--muted);line-height:1.3}
+.delta{display:inline-block;margin-top:8px;padding:3px 9px;border-radius:999px;background:var(--ok-soft);color:var(--ok);font-size:12.5px;font-weight:700}
 .privacy-line{display:flex;gap:8px;align-items:flex-start;margin-top:14px;padding-top:12px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--ink-2);line-height:1.45}
 .privacy-line .ic{width:16px;height:16px;color:var(--brand);margin-top:1px}
 .quotes{display:grid;gap:8px}
@@ -716,7 +728,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== HCP: LOCK SCREEN ===================== -->
     <section class="screen lock" data-screen="lock" data-status="light" tabindex="-1" aria-label="Phone lock screen">
-      <button class="lock-exit" data-go="start" data-dir="back"><svg class="ic"><use href="#i-back"/></svg>Profiles</button>
+      <button class="lock-exit" data-go="start" data-dir="back"><svg class="ic"><use href="#i-back"/></svg>Demo</button>
       <div class="lock-inner">
         <svg class="ic lock-ic"><use href="#i-lock"/></svg>
         <div class="clock">8:12</div>
@@ -784,8 +796,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== HCP: BRIEFING ===================== -->
     <section class="screen" data-screen="briefing" data-tabs="hcp" tabindex="-1" aria-labelledby="briefTitle">
-      <header class="topbar app has-back">
-        <button class="back-btn" data-back="lock"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button>
+      <header class="topbar app">
         <div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span></div>
         <button class="avatar av-hcp sm" data-go="you" data-dir="tab" aria-label="Your preferences and privacy">LM</button>
       </header>
@@ -876,7 +887,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
         <div class="endcap">
           <div class="endcap-ic"><svg class="ic"><use href="#i-check"/></svg></div>
           <strong>You’re all caught up.</strong><br>
-          <span data-if="!paused">Next briefing: Mon 12 Oct, 08:10 · <button class="link inline" data-go="you" data-dir="tab">change</button></span>
+          <span data-if="!paused">Next briefing: Mon 12 Oct, 08:10 · <button class="link inline" data-go="you" data-dir="tab">change</button></span><br><button class="link inline" data-go="you" data-dir="tab">See your dashboard</button>
           <span data-if="paused">Briefings paused until Wed 4 Nov · <button class="link inline" data-go="you" data-dir="tab">resume</button></span>
         </div>
         <button class="ae-row" data-sheet="ae"><svg class="ic"><use href="#i-alert"/></svg><span>Report a suspected side effect</span><svg class="ic"><use href="#i-chev"/></svg></button>
@@ -892,7 +903,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== HCP: CHECK RULES ===================== -->
     <section class="screen" data-screen="rules" data-tabs="hcp" tabindex="-1" aria-labelledby="rulesTitle">
-      <header class="topbar app has-back"><button class="back-btn" id="rulesBack" data-back="briefing"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button><h1 class="topbar-title" id="rulesTitle">Check rules</h1><span class="chip brand tiny">Shingles · 2026</span></header>
+      <header class="topbar app"><h1 class="topbar-title" id="rulesTitle">Check rules</h1><span class="chip brand tiny">Shingles · 2026</span></header>
       <div class="scroll">
         <div class="banner info"><svg class="ic"><use href="#i-info"/></svg><p><strong>Reference only, not a clinical decision tool.</strong> Pick a group, never a patient: no names, IDs or dates of birth.</p></div>
         <span class="mtag" data-l="1">Functional · rule found in under 2 min</span>
@@ -932,8 +943,8 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== HCP: ASK ===================== -->
     <section class="screen pad-tabs" data-screen="ask" data-tabs="hcp" tabindex="-1" aria-labelledby="askTitle">
-      <header class="topbar app has-back">
-        <button class="back-btn" id="askBack" data-back="briefing"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button>
+      <header class="topbar app">
+        <button class="back-btn" id="askBack" data-back="briefing" hidden><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button>
         <h1 class="topbar-title" id="askTitle">Ask</h1>
         <span class="chip ai"><svg class="ic"><use href="#i-spark"/></svg>AI assistant</span>
       </header>
@@ -965,10 +976,44 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== HCP: YOU / PREFERENCES ===================== -->
     <section class="screen" data-screen="you" data-tabs="hcp" tabindex="-1" aria-labelledby="youTitle">
-      <header class="topbar app has-back"><button class="back-btn" data-back="briefing"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button><h1 class="topbar-title" id="youTitle">Me</h1></header>
+      <header class="topbar app"><h1 class="topbar-title" id="youTitle">Me</h1></header>
       <div class="scroll">
         <div class="card flat profile"><span class="avatar av-hcp">LM</span><div><strong>Dra. Lucía Martín</strong><div class="muted">Family medicine · Comunidad de Madrid · verified</div></div></div>
         <span class="mtag" data-l="4">Strategic · consent kept at 6 months</span>
+
+        <h2 class="section-title">Your dashboard</h2>
+        <div class="dash-card">
+          <h3>Shingles: two-dose coverage at 65</h3>
+          <p class="cap">Spain 2024, public Ministry data (SIV). Regions range from 4% to 71%.</p>
+          <div class="dbar"><span>First dose</span><b>33.4%</b><div class="track"><div class="fill o" style="width:33.4%"></div><div class="target" style="left:75%"></div></div></div>
+          <div class="dbar"><span>Both doses</span><b>26.2%</b><div class="track"><div class="fill" style="width:26.2%"></div><div class="target" style="left:75%"></div></div></div>
+          <div class="target-lbl" style="padding-right:22%">2030 target 75% ▲</div>
+        </div>
+        <div class="dash-card">
+          <h3>Your activity · last 30 days</h3>
+          <p class="cap">What you did with GSKGO. Counted on this account only.</p>
+          <div class="stat-grid">
+            <div class="stat"><span class="v" id="stRules">11</span><span class="l">Rules checked</span></div>
+            <div class="stat"><span class="v" id="stQr">7</span><span class="l">Patient leaflets shown (QR)</span></div>
+            <div class="stat"><span class="v" id="stAsk">3</span><span class="l">Questions answered</span></div>
+            <div class="stat"><span class="v" data-text="heldCount">4</span><span class="l">Messages held back for you</span></div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <h3>Who in your practice is due for dose 2?</h3>
+          <p class="cap" style="margin-bottom:8px">That list lives in your health service’s own record system. GSKGO never sees patient data, by design.</p>
+          <button class="btn secondary block" data-act="due-guide"><svg class="ic"><use href="#i-info"/></svg>How to find it in your record system</button>
+        </div>
+        <span class="mtag" data-l="1">Functional · progress visible without patient data</span>
+
+        <h2 class="section-title">Request from GSK</h2>
+        <div class="list-card">
+          <button class="row-link" data-sheet="req-leaflets"><svg class="ic"><use href="#i-qr"/></svg><span>Printed patient leaflets</span><svg class="ic"><use href="#i-chev"/></svg></button>
+          <button class="row-link" data-act="req-visit"><svg class="ic"><use href="#i-person"/></svg><span>A visit or call from Laura</span><svg class="ic"><use href="#i-chev"/></svg></button>
+          <button class="row-link" data-act="open-mi"><svg class="ic"><use href="#i-spark"/></svg><span>An answer from a medical advisor</span><svg class="ic"><use href="#i-chev"/></svg></button>
+        </div>
+        <p class="fine mt8">Vaccine stock for your centre comes from your regional health service, not from GSK.</p>
+        <span class="mtag" data-l="2">Adoption · HCP-initiated requests</span>
 
         <h2 class="section-title">Your briefing</h2>
         <div class="list-card">
@@ -1084,8 +1129,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== MARKETING: HOME ===================== -->
     <section class="screen" data-screen="m-home" data-tabs="mkt" tabindex="-1" aria-labelledby="mTitle">
-      <header class="topbar app has-back">
-        <button class="back-btn" data-back="start"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button>
+      <header class="topbar app">
         <div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span><span class="chip brand tiny">Marketing</span></div>
         <button class="avatar av-mkt sm" data-sheet="m-menu" aria-label="Account menu">JO</button>
       </header>
@@ -1298,7 +1342,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
 
     <!-- ===================== MARKETING: PIPELINE ===================== -->
     <section class="screen" data-screen="m-pipeline" data-tabs="mkt" tabindex="-1" aria-labelledby="mpiTitle">
-      <header class="topbar app has-back"><button class="back-btn" data-back="m-home"><svg class="ic"><use href="#i-back"/></svg><span class="bl">Back</span></button><h1 class="topbar-title" id="mpiTitle">Pipeline</h1><button class="avatar av-mkt sm" data-sheet="m-menu" aria-label="Account menu">JO</button></header>
+      <header class="topbar app"><h1 class="topbar-title" id="mpiTitle">Pipeline</h1><button class="avatar av-mkt sm" data-sheet="m-menu" aria-label="Account menu">JO</button></header>
       <div class="scroll">
         <p class="lead">Every asset and decision, with who’s accountable.</p>
         <div class="list-card mt16">
@@ -1314,6 +1358,51 @@ img.logo{width:auto!important;object-fit:contain;display:block}
       </div>
     </section>
 
+    <section class="screen" data-screen="m-dash" data-tabs="mkt" tabindex="-1" aria-labelledby="mdTitle">
+      <header class="topbar app"><h1 class="topbar-title" id="mdTitle">Dashboard</h1><button class="avatar av-mkt sm" data-sheet="m-menu" aria-label="Account menu">JO</button></header>
+      <div class="scroll">
+        <p class="eyebrow">Pilot 2027 · 3 regions · week 41</p>
+        <h1>How the pilot is doing</h1>
+        <div class="dash-card">
+          <h3>Two-dose coverage at 65 · pilot vs control</h3>
+          <p class="cap">Aggregated by health zone from public and regional data. This is the ROI number.</p>
+          <div class="dbar"><span>Pilot areas</span><b>27.8%</b><div class="track"><div class="fill" style="width:27.8%"></div></div></div>
+          <div class="dbar"><span>Matched control areas</span><b>26.3%</b><div class="track"><div class="fill g" style="width:26.3%"></div></div></div>
+          <span class="delta">+1.5 pp vs control · target +2 pp by Mar 2028</span>
+        </div>
+        <span class="mtag" data-l="4">Strategic · coverage uplift vs control</span>
+        <div class="dash-card">
+          <h3>GP adoption funnel</h3>
+          <p class="cap">Family doctors invited in the 3 pilot regions.</p>
+          <div class="dbar"><span>Invited</span><b>4,736</b><div class="track"><div class="fill g" style="width:100%"></div></div></div>
+          <div class="dbar"><span>Opted in</span><b>1,184 · 25%</b><div class="track"><div class="fill" style="width:25%"></div></div></div>
+          <div class="dbar"><span>Active at 90 days</span><b>711 · 60% of opted in</b><div class="track"><div class="fill" style="width:15%"></div></div></div>
+        </div>
+        <span class="mtag" data-l="2">Adoption · opt-in and 90-day activity</span>
+        <div class="dash-card">
+          <h3>What GPs ask about · last 30 days</h3>
+          <p class="cap">From GSKGO questions and consented rep-visit topics.</p>
+          <div class="dbar"><span>Second-dose reminders</span><b>41%</b><div class="track"><div class="fill o" style="width:41%"></div></div></div>
+          <div class="dbar"><span>Who is covered, risk groups</span><b>27%</b><div class="track"><div class="fill o" style="width:27%"></div></div></div>
+          <div class="dbar"><span>Same visit as the flu jab</span><b>18%</b><div class="track"><div class="fill o" style="width:18%"></div></div></div>
+          <div class="dbar"><span>Material for patients</span><b>14%</b><div class="track"><div class="fill o" style="width:14%"></div></div></div>
+          <p class="cap" style="margin:10px 0 0">Side-effect reports go to Pharmacovigilance and are never counted here.</p>
+        </div>
+        <div class="dash-card">
+          <h3>Channel health · this month</h3>
+          <div class="stat-grid">
+            <div class="stat"><span class="v">9,420</span><span class="l">Touches sent, all channels</span></div>
+            <div class="stat"><span class="v">2,310</span><span class="l">Held back as repeats (20%)</span></div>
+            <div class="stat"><span class="v">1.8%</span><span class="l">Opt-out rate</span></div>
+            <div class="stat"><span class="v">86%</span><span class="l">Rep visits with a prep note</span></div>
+          </div>
+        </div>
+        <span class="mtag" data-l="3">ROI · duplicate spend avoided</span>
+        <div class="privacy-line"><svg class="ic"><use href="#i-shield"/></svg><span>Aggregated only. Per doctor, GSK sees only consented engagement (what she read and asked), never prescriptions or patient data.</span></div>
+        <p class="fine mt8">Illustrative data</p>
+      </div>
+    </section>
+
     <div class="splash" id="splash" hidden aria-hidden="true"><div class="logo-row"><img class="logo" src="gsk-logo.png" alt="GSK"><span class="wordmark"><span class="go">go</span></span></div></div>
 
     <!-- tab bars -->
@@ -1324,7 +1413,8 @@ img.logo{width:auto!important;object-fit:contain;display:block}
       <button class="tab" data-go="you" data-dir="tab"><svg class="ic"><use href="#i-user"/></svg>Me</button>
     </nav>
     <nav class="tabbar" data-tabbar="mkt" aria-label="Marketing app" hidden>
-      <button class="tab" data-go="m-home" data-dir="tab"><svg class="ic"><use href="#i-chart"/></svg>Insights</button>
+      <button class="tab" data-go="m-home" data-dir="tab"><svg class="ic"><use href="#i-spark"/></svg>Insights</button>
+      <button class="tab" data-go="m-dash" data-dir="tab"><svg class="ic"><use href="#i-chart"/></svg>Dashboard</button>
       <button class="tab" data-go="m-pipeline" data-dir="tab"><svg class="ic"><use href="#i-layers"/></svg>Pipeline</button>
     </nav>
 
@@ -1352,7 +1442,7 @@ img.logo{width:auto!important;object-fit:contain;display:block}
         <button data-go="rules" data-pp="rules"><span class="pp-num">5</span>Check rules + QR</button>
         <button data-go="item:second" data-pp="item"><span class="pp-num">6</span>Second dose + sources</button>
         <button data-go="ask" data-pp="ask"><span class="pp-num">7</span>Ask (guardrails)</button>
-        <button data-go="you" data-pp="you"><span class="pp-num">8</span>Me: control + AI off</button>
+        <button data-go="you" data-pp="you"><span class="pp-num">8</span>Me: dashboard + control</button>
         <button data-go="data" data-pp="data"><span class="pp-num">9</span>What we know</button>
       </div>
     </div>
@@ -1364,7 +1454,8 @@ img.logo{width:auto!important;object-fit:contain;display:block}
         <button data-go="m-brief" data-pp="m-brief"><span class="pp-num">3</span>AI brief</button>
         <button data-go="m-plan" data-pp="m-plan"><span class="pp-num">4</span>Coordinated plan</button>
         <button data-go="m-done" data-pp="m-done"><span class="pp-num">5</span>Loop closed</button>
-        <button data-go="m-pipeline" data-pp="m-pipeline"><span class="pp-num">6</span>Pipeline</button>
+        <button data-go="m-dash" data-pp="m-dash"><span class="pp-num">6</span>Pilot dashboard</button>
+        <button data-go="m-pipeline" data-pp="m-pipeline"><span class="pp-num">7</span>Pipeline</button>
       </div>
     </div>
     <div class="list-card">
@@ -1462,6 +1553,17 @@ img.logo{width:auto!important;object-fit:contain;display:block}
   <button class="btn block mt16" data-act="open-pdf"><svg class="ic"><use href="#i-doc"/></svg>Open the document (PDF)</button>
 </template>
 
+<template id="sheet-req-leaflets">
+  <span class="kicker"><svg class="ic"><use href="#i-qr"/></svg>Patient material · free, non-promotional</span>
+  <h2>Printed patient leaflets</h2>
+  <p class="muted">The Ministry of Health’s Q&amp;A on shingles vaccination, printed, with the QR for patients who want to read more.</p>
+  <div class="stack mt16">
+    <button class="btn block" data-act="req-leaflets-rep" data-if="rep">Laura brings 50 on her next visit</button>
+    <button class="btn secondary block" data-act="req-leaflets-post">Send 50 by post to my health centre</button>
+  </div>
+  <span class="mtag" data-l="3">ROI · material ordered vs used</span>
+</template>
+
 <template id="sheet-mi">
   <h2>Ask a GSK medical advisor</h2>
   <p class="muted">A medical advisor (a person, not AI) replies within 2 working days.</p>
@@ -1551,7 +1653,7 @@ const KEY = 'gskgo-proto-v1';
 const DEFAULT = () => ({
   v: 1, lens: false,
   hcp: { onboarded: false, verified: false, consent: { personal: false, rep: false, ai: false }, ratings: {}, seat: false, paused: false,
-         miRef: null, askCtx: null, lastQ: null, lastItem: 'second', read: {}, repRemoved: false, inferRemoved: false, saved: {},
+         miRef: null, askCtx: null, lastQ: null, lastItem: 'second', read: {}, stats: { rules: 0, qr: 0, asks: 0 }, repRemoved: false, inferRemoved: false, saved: {},
          assembled: false, loop: false, rule: { region: 'mad', age: '65-80', risk: 'none' } },
   mkt: { fatigue: null, channel: null, submitted: false, briefReady: false, variant: 0 }
 });
@@ -1750,13 +1852,13 @@ const isIOS = !/Android/i.test(navigator.userAgent) && (/iP(hone|ad|od)/.test(na
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 const framedMQ = window.matchMedia('(min-width:700px) and (min-height:620px)');
-const haptic = () => { try { if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(8); } catch (e) {} };
+const haptic = () => { try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {} };
 
 const GROUP = { start: 'demo', lock: 'os', verify: 'onboard', consent: 'onboard', briefing: 'hcp', item: 'hcp', rules: 'hcp', ask: 'hcp', you: 'hcp', data: 'hcp' };
-const PARENT = { lock: 'start', verify: 'lock', consent: 'verify', briefing: 'lock', item: 'briefing', rules: 'briefing', ask: 'briefing', you: 'briefing', data: 'you',
-  'm-home': 'start', 'm-pipeline': 'm-home', 'm-insight': 'm-home', 'm-brief': 'm-insight', 'm-plan': 'm-brief', 'm-done': 'm-home' };
-const TITLES = { start: 'Profiles', lock: 'Lock screen', verify: 'Verify', consent: 'Consent', briefing: 'This week', item: 'Article', rules: 'Check rules', ask: 'Ask', you: 'Me', data: 'Your data',
-  'm-home': 'Insights', 'm-insight': 'Insight', 'm-brief': 'Brief', 'm-plan': 'Plan', 'm-done': 'Back', 'm-pipeline': 'Pipeline' };
+const PARENT = { lock: 'start', verify: 'lock', consent: 'verify', briefing: 'lock', item: 'briefing', rules: 'briefing', ask: 'briefing', you: 'lock', data: 'you',
+  'm-home': 'start', 'm-dash': 'start', 'm-pipeline': 'start', 'm-insight': 'm-home', 'm-brief': 'm-insight', 'm-plan': 'm-brief', 'm-done': 'm-home' };
+const TITLES = { start: 'Demo', lock: 'Lock screen', verify: 'Verify', consent: 'Consent', briefing: 'This week', item: 'Article', rules: 'Check rules', ask: 'Ask', you: 'Me', data: 'Your data',
+  'm-home': 'Insights', 'm-insight': 'Insight', 'm-brief': 'Brief', 'm-plan': 'Plan', 'm-done': 'Back', 'm-pipeline': 'Pipeline', 'm-dash': 'Dashboard' };
 const idOf = r => String(r || '').split(':')[0];
 const groupOf = r => { const id = idOf(r); return id.startsWith('m-') ? 'mkt' : (GROUP[id] || id); };
 
@@ -1806,7 +1908,7 @@ function replace(route, dir = 'fade') {
 function backTarget(fallback) {
   const prev = stack[navIdx - 1];
   const parent = fallback || PARENT[idOf(curRoute)] || 'start';
-  if (navIdx > 0 && prev && !prev.sheet) return { route: prev.route, history: true };
+  if (navIdx > 0 && prev && !prev.sheet && (groupOf(prev.route) === groupOf(curRoute) || idOf(prev.route) === idOf(parent))) return { route: prev.route, history: true };
   return { route: parent, history: false };
 }
 function back(fallback, dir = 'back') {
@@ -1965,7 +2067,7 @@ const SHEET_INIT = {
     const chip = $('.chip.ok', b); if (chip && d.pub) chip.innerHTML = `${icon('check')}Public source`;
   },
   'about-approved'(b, opener) { $('[data-fill="code"]', b).textContent = (opener && opener.dataset.code) || 'ES-HZ-0926-014'; },
-  qr(b) { drawQR($('#patientQr', b)); },
+  qr(b) { drawQR($('#patientQr', b)); bump('qr'); },
   mi(b) {
     const lq = S.hcp.lastQ, ta = $('#miText', b), note = $('#miNote', b);
     if (lq && ['patient', 'fallback', 'compare'].includes(lq.key)) { const r = redact(lq.text); ta.value = r.text; note.hidden = !r.removed.length; }
@@ -2404,10 +2506,16 @@ async function ask(key, text) {
   requestAnimationFrame(scrollChat);
 }
 function autosize() { askInput.style.height = 'auto'; askInput.style.height = Math.min(askInput.scrollHeight, 120) + 'px'; }
+function bump(k) { S.hcp.stats = S.hcp.stats || { rules: 0, qr: 0, asks: 0 }; S.hcp.stats[k] = (S.hcp.stats[k] || 0) + 1; save(); }
+function renderStats() {
+  const st = S.hcp.stats || {}, set = (id, base, k) => { const el = $(id); if (el) el.textContent = base + (st[k] || 0); };
+  set('#stRules', 11, 'rules'); set('#stQr', 7, 'qr'); set('#stAsk', 3, 'asks');
+}
 function submitAsk() {
   const q = askInput.value.trim();
   if (!q || busy) return;
   askInput.value = ''; autosize();
+  bump('asks');
   ask(matchQ(q), q);
 }
 composer.addEventListener('submit', e => { e.preventDefault(); submitAsk(); });
@@ -2464,8 +2572,12 @@ const ENTER = {
   },
   rules() { renderRules(); },
   item(p) { renderItem(p); },
-  ask() { renderAsk(); },
-  you() { syncConsentInputs(); },
+  ask() {
+    const prev = stack[navIdx - 1];
+    $('#askBack').hidden = !(prev && !prev.sheet && idOf(prev.route) === 'item' && S.hcp.askCtx);
+    renderAsk();
+  },
+  you() { syncConsentInputs(); renderStats(); },
   'm-brief'() {
     setClaim3();
     const scr = ROUTES['m-brief'];
@@ -2485,7 +2597,7 @@ const ACT = {
   'start-mkt'() { S.mkt = DEFAULT().mkt; save(); push('m-home'); },
   'open-notif'() { haptic(); launch(!S.hcp.onboarded ? (S.hcp.verified ? 'consent' : 'verify') : (S.hcp.loop ? 'item:reminder' : 'briefing')); },
   async verify(t) {
-    if (S.hcp.verified) { replace('consent', 'fwd'); return; } // onboarding is one step in history: Back from the briefing exits to the lock screen
+    if (S.hcp.verified) { push('consent'); return; }
     const inp = $('#colegiado'), ok = /^\d{2}\s*\/?\s*\d{5,7}$/.test(inp.value.trim());
     $('#verifyErr').hidden = ok; inp.setAttribute('aria-invalid', ok ? 'false' : 'true'); if (!ok) { inp.focus(); return; }
     t.disabled = true;
@@ -2495,10 +2607,17 @@ const ACT = {
     S.hcp.verified = true; save();
     await wait(700);
     t.disabled = false;
-    replace('consent', 'fwd');
+    push('consent');
   },
-  rule(t) { S.hcp.rule[t.dataset.k] = t.dataset.v; save(); haptic(); renderRules(); },
+  rule(t) { S.hcp.rule[t.dataset.k] = t.dataset.v; bump('rules'); haptic(); renderRules(); },
+  'due-guide'() { toast('Opens a 1-minute guide for your health service’s record system. Nothing is shared with GSK.'); },
   'open-qr'(t) { openSheet('qr', t); },
+  'req-leaflets-rep'() { closeSheet(); bump('req'); toast('Requested: 50 leaflets. Laura brings them on her next visit.'); },
+  'req-leaflets-post'() { closeSheet(); bump('req'); toast('Requested: 50 leaflets by post to your health centre, within 5 working days.'); },
+  'req-visit'() {
+    if (!S.hcp.consent.rep) { toast('Turn on “Connect with Laura” in Privacy & AI first. Then she can see your request.'); return; }
+    bump('req'); toast('Request sent to Laura. She will propose a time; she sees only the topic, never patient details.');
+  },
   'ae-start'() { closeSheet(); toast('Opening the GSK safety report form (simulated). It goes to Pharmacovigilance only.'); },
   'ae-aemps'() { closeSheet(); toast('Opening notificaRAM.es, the Spanish reporting system (simulated)'); },
   'unsub-all'() { S.hcp.consent = { personal: false, rep: false, ai: false }; S.hcp.paused = true; S.hcp.assembled = false; save(); syncConsentInputs(); applyIfs(); toast('Unsubscribed from everything. You can come back any time.'); },
